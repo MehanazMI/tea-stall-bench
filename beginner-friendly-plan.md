@@ -1,4 +1,4 @@
-# Agentic Post - Beginner-Friendly Team Plan
+# Tea Stall Bench - Beginner-Friendly Team Plan
 ## 2-Month Development for Mixed-Experience Teams
 
 ---
@@ -463,7 +463,7 @@ If 2+ weeks behind by Week 6:
 - 🚀 Confidence in programming career
 
 **For Team:**
-- 🚀 Working Agentic Post system (simplified)
+- 🚀 Working Tea Stall Bench system (simplified)
 - 🚀 Strong team bond
 - 🚀 Experienced devs gained mentorship skills
 - 🚀 New programmers in the community!

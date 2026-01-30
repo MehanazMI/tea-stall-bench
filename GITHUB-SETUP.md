@@ -1,6 +1,6 @@
 # GitHub Setup Guide
 
-This document explains how to set up and maintain GitHub sync for the Agentic Post project.
+This document explains how to set up and maintain GitHub sync for the Tea Stall Bench project.
 
 ---
 
@@ -44,7 +44,7 @@ git status
 git add .
 
 # Create initial commit
-git commit -m "Initial commit: Agentic Post project with documentation"
+git commit -m "Initial commit: Tea Stall Bench project with documentation"
 
 # Push to GitHub (main branch)
 git push -u origin main

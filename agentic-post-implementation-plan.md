@@ -1,8 +1,8 @@
-# Agentic Post - Implementation Plan
+# Tea Stall Bench - Implementation Plan
 
 ## Project Overview
 
-**Agentic Post** is an AI orchestration system that automates content creation and publishing. It demonstrates multi-agent coordination, sequential and parallel orchestration patterns, and real-world integration with WhatsApp.
+**Tea Stall Bench** is an AI orchestration system that automates content creation and publishing. It demonstrates multi-agent coordination, sequential and parallel orchestration patterns, and real-world integration with WhatsApp.
 
 **Core Value:** Learn AI orchestration practically while building a useful automation tool.
 
@@ -591,4 +591,4 @@ After the 1-month MVP, consider:
 
 ---
 
-**Ready to build Agentic Post!** 🚀
+**Ready to build Tea Stall Bench!** 🚀

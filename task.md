@@ -1,7 +1,7 @@
-# Agentic Post - Team Leadership Planning
+# Tea Stall Bench - Team Leadership Planning
 
 ## Overview
-Create a comprehensive 2-month team leadership plan for building Agentic Post with bi-weekly meetings.
+Create a comprehensive 2-month team leadership plan for building Tea Stall Bench with bi-weekly meetings.
 
 ## Tasks
 

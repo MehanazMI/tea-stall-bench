@@ -1,11 +1,11 @@
-# Agentic Post - Team Leadership Plan
+# Tea Stall Bench - Team Leadership Plan
 ## 2-Month Development Timeline with Bi-Weekly Meetings
 
 ---
 
 ## 📋 Executive Summary
 
-**Project:** Agentic Post - AI Multi-Agent Content Orchestration System  
+**Project:** Tea Stall Bench - AI Multi-Agent Content Orchestration System  
 **Duration:** 8 weeks (2 months)  
 **Team Size:** 4-6 developers  
 **Meeting Frequency:** Twice weekly (Tuesday & Friday recommended)  
@@ -421,7 +421,7 @@
 
 **Agenda:**
 1. **Final Presentation** (30 min)
-   - **YOU present:** Complete Agentic Post system
+   - **YOU present:** Complete Tea Stall Bench system
    - Live demo: Topic → Published on WhatsApp
    - Architecture walkthrough
    - Metrics review (time, quality, success rate)
@@ -634,7 +634,7 @@ Before Meeting 1, ensure team has:
 ## 🎉 Expected Outcomes
 
 After 2 months, you will have:
-- ✅ **Working Product:** Agentic Post system publishing to WhatsApp
+- ✅ **Working Product:** Tea Stall Bench system publishing to WhatsApp
 - ✅ **Team Experience:** Led 16 structured meetings
 - ✅ **Technical Skills:** Multi-agent AI orchestration expertise
 - ✅ **Leadership Skills:** Sprint planning, code review, mentorship
