@@ -82,7 +82,7 @@
 ## 📂 Project Structure
 
 ```
-agentic-post/
+tea-stall-bench/
 ├── backend/
 │   ├── agents/
 │   │   ├── writer_agent.py

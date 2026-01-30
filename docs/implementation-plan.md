@@ -81,7 +81,7 @@ graph TD
 ### Core Application Structure
 
 ```
-c:\Silambu\agentic-post\
+c:\Silambu\tea-stall-bench\
 ├─ backend\
 │  ├─ agents\
 │  │  ├─ __init__.py
@@ -122,7 +122,7 @@ c:\Silambu\agentic-post\
 - Pair A (Experienced Dev + Beginner): Frontend
 - Pair B (Experienced Dev + Beginner): Writer Agent
 
-#### [NEW] [backend/agents/base_agent.py](file:///c:/Silambu/agentic-post/backend/agents/base_agent.py)
+#### [NEW] [backend/agents/base_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/base_agent.py)
 
 Base class for all agents with common functionality:
 - LLM client integration
@@ -138,7 +138,7 @@ Base class for all agents with common functionality:
 
 **Beginner Task:** Write test cases for base agent
 
-#### [NEW] [backend/agents/writer_agent.py](file:///c:/Silambu/agentic-post/backend/agents/writer_agent.py)
+#### [NEW] [backend/agents/writer_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/writer_agent.py)
 
 Single-agent content generator for MVP:
 - Takes topic as input
@@ -192,7 +192,7 @@ Simple, beautiful web interface:
 - Pair A: Frontend improvements
 - Pair B: Research and Outline agents
 
-#### [NEW] [backend/agents/research_agent.py](file:///c:/Silambu/agentic-post/backend/agents/research_agent.py)
+#### [NEW] [backend/agents/research_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/research_agent.py)
 
 Web research capabilities:
 - Integration with DuckDuckGo Search API (free)
@@ -210,7 +210,7 @@ Web research capabilities:
 }
 ```
 
-#### [NEW] [backend/agents/outline_agent.py](file:///c:/Silambu/agentic-post/backend/agents/outline_agent.py)
+#### [NEW] [backend/agents/outline_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/outline_agent.py)
 
 Content structure creator:
 - Takes research data as input
@@ -232,7 +232,7 @@ Content structure creator:
 }
 ```
 
-#### [MODIFY] [backend/agents/writer_agent.py](file:///c:/Silambu/agentic-post/backend/agents/writer_agent.py)
+#### [MODIFY] [backend/agents/writer_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/writer_agent.py)
 
 Enhanced to use outline:
 - Now takes outline as input (not just topic)
@@ -259,7 +259,7 @@ async def run_pipeline(topic):
     return content
 ```
 
-#### [MODIFY] [backend/main.py](file:///c:/Silambu/agentic-post/backend/main.py)
+#### [MODIFY] [backend/main.py](file:///c:/Silambu/tea-stall-bench/backend/main.py)
 
 Updated to use orchestrator:
 - Replace single agent with pipeline
@@ -267,7 +267,7 @@ Updated to use orchestrator:
 - WebSocket updates for each stage
 - Better error responses
 
-#### [MODIFY] [frontend/index.html](file:///c:/Silambu/agentic-post/frontend/index.html)
+#### [MODIFY] [frontend/index.html](file:///c:/Silambu/tea-stall-bench/frontend/index.html)
 
 Enhanced UI:
 - Pipeline visualization (progress bars per agent)
@@ -285,7 +285,7 @@ Enhanced UI:
 - Pair A: UI polish (beginner leads!)
 - Pair B: Editor agent and orchestrator
 
-#### [NEW] [backend/agents/editor_agent.py](file:///c:/Silambu/agentic-post/backend/agents/editor_agent.py)
+#### [NEW] [backend/agents/editor_agent.py](file:///c:/Silambu/tea-stall-bench/backend/agents/editor_agent.py)
 
 Content review and improvement:
 - Grammar and spelling fixes
@@ -296,7 +296,7 @@ Content review and improvement:
 
 **Prompt Focus:** Act as professional editor
 
-#### [MODIFY] [backend/orchestrator/pipeline.py](file:///c:/Silambu/agentic-post/backend/orchestrator/pipeline.py)
+#### [MODIFY] [backend/orchestrator/pipeline.py](file:///c:/Silambu/tea-stall-bench/backend/orchestrator/pipeline.py)
 
 Add Editor to pipeline:
 - Sequential execution (no parallel for simplicity)
@@ -313,7 +313,7 @@ async def run_pipeline(topic):
     return edited_content
 ```
 
-#### [MODIFY] [frontend/index.html](file:///c:/Silambu/agentic-post/frontend/index.html)
+#### [MODIFY] [frontend/index.html](file:///c:/Silambu/tea-stall-bench/frontend/index.html)
 
 Visual enhancements:
 - Editor agent in pipeline

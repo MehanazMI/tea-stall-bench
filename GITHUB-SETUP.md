@@ -9,7 +9,7 @@ This document explains how to set up and maintain GitHub sync for the Tea Stall 
 ### Step 1: Create GitHub Repository
 
 1. **Go to GitHub:** https://github.com/new
-2. **Repository name:** `agentic-post`
+2. **Repository name:** `tea-stall-bench`
 3. **Description:** AI Multi-Agent Content Orchestration System
 4. **Visibility:** Public (or Private if you prefer)
 5. **Do NOT initialize with README** (we already have one)
@@ -21,14 +21,14 @@ After creating the repository on GitHub, you'll see setup instructions. Use thes
 
 ```bash
 # Navigate to project directory
-cd c:\Silambu\agentic-post
+cd c:\Silambu\tea-stall-bench
 
 # Set your GitHub username and email (one-time configuration)
 git config user.name "Your Name"
 git config user.email "your-email@example.com"
 
 # Add remote repository (replace YOUR-USERNAME with your GitHub username)
-git remote add origin https://github.com/YOUR-USERNAME/agentic-post.git
+git remote add origin https://github.com/YOUR-USERNAME/tea-stall-bench.git
 
 # Verify remote is set
 git remote -v
@@ -207,7 +207,7 @@ ssh-keygen -t ed25519 -C "your-email@example.com"
 cat ~/.ssh/id_ed25519.pub
 
 # Change remote to SSH
-git remote set-url origin git@github.com:YOUR-USERNAME/agentic-post.git
+git remote set-url origin git@github.com:YOUR-USERNAME/tea-stall-bench.git
 ```
 
 ---
@@ -223,7 +223,7 @@ Use this checklist to verify your setup:
 - [ ] `.gitignore` file created
 - [ ] Initial commit made
 - [ ] Successfully pushed to GitHub (`git push -u origin main`)
-- [ ] Can see files on github.com/YOUR-USERNAME/agentic-post
+- [ ] Can see files on github.com/YOUR-USERNAME/tea-stall-bench
 - [ ] README looks good with rendered diagrams
 - [ ] Authentication working (token or SSH)
 
@@ -249,7 +249,7 @@ git push origin main
 **Solution:**
 ```bash
 # Make sure you're in the right directory
-cd c:\Silambu\agentic-post
+cd c:\Silambu\tea-stall-bench
 git init
 ```
 
