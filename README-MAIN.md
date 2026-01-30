@@ -142,7 +142,7 @@ This project is designed for **mixed-experience teams**!
 - **Learning sessions** in every meeting
 - **Simplified scope** for easier onboarding
 
-📘 See [Beginner Team Plan](agentic-post-beginner-team-plan.md) for 8-week guide
+📘 See [Beginner Team Plan](tea-stall-bench-beginner-team-plan.md) for 8-week guide
 
 ---
 
@@ -150,7 +150,7 @@ This project is designed for **mixed-experience teams**!
 
 - **[Quick Start Guide](README-SIMPLIFIED.md)** - Get started in 5 minutes
 - **[Implementation Plan](README.md)** - Complete technical architecture
-- **[Beginner Team Plan](agentic-post-beginner-team-plan.md)** - 8-week learning roadmap
+- **[Beginner Team Plan](tea-stall-bench-beginner-team-plan.md)** - 8-week learning roadmap
 - **[GitHub Setup](GITHUB-SETUP.md)** - Git workflow and sync guide
 
 ---

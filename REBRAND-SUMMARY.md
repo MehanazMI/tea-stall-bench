@@ -41,8 +41,8 @@
 4. **GITHUB-SETUP.md** - Git sync instructions
 
 ### 📋 Files That Still Need Manual Updates
-- `agentic-post-implementation-plan.md` → Rename to `tea-stall-bench-implementation-plan.md`
-- `agentic-post-beginner-team-plan.md` → Rename to `tea-stall-bench-beginner-team-plan.md`
+- `tea-stall-bench-implementation-plan.md` → Rename to `tea-stall-bench-implementation-plan.md`
+- `tea-stall-bench-beginner-team-plan.md` → Rename to `tea-stall-bench-beginner-team-plan.md`
 - Update internal references in team plans
 
 ---

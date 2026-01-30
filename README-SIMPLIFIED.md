@@ -161,7 +161,7 @@ Navigate to `http://localhost:8000`
 - **Learning sessions** every meeting
 - **Simplified scope** (6 agents, not 8)
 
-📘 See [Beginner Team Plan](agentic-post-beginner-team-plan.md) for detailed guide
+📘 See [Beginner Team Plan](tea-stall-bench-beginner-team-plan.md) for detailed guide
 
 ---
 
@@ -267,8 +267,8 @@ After the basics work, consider adding:
 
 ## 📚 Documentation
 
-- **[Full Implementation Plan](agentic-post-implementation-plan.md)** - Complete technical details
-- **[Beginner Team Plan](agentic-post-beginner-team-plan.md)** - 8-week learning guide with meetings
+- **[Full Implementation Plan](tea-stall-bench-implementation-plan.md)** - Complete technical details
+- **[Beginner Team Plan](tea-stall-bench-beginner-team-plan.md)** - 8-week learning guide with meetings
 
 ---
 
