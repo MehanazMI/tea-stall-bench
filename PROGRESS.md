@@ -19,14 +19,14 @@ Last Updated: 2026-02-02
 
 ### Sprint 1: Foundation (Week 1-2)
 **Status:** 🔄 IN PROGRESS  
-**Progress:** 1/7 tasks complete (14%)  
+**Progress:** 2/7 tasks complete (28%)  
 **Start:** 2026-02-04  
 **Target End:** 2026-02-18
 
 | # | Task | Status | Assignee | Progress |
 |---|------|--------|----------|----------|
-| 1 | Project Setup | ✅ DONE | Backend Agent | 5/5 checkpoints |
-| 2 | Base Agent Class | ⬜ TODO | Backend Agent | 0/8 checkpoints |
+| 1 | Project Setup | ✅ DONE | Chai (Team Lead) | 5/5 checkpoints |
+| 2 | Base Agent Class | ✅ DONE | Chai (Team Lead) | 8/8 checkpoints |
 | 3 | LLM Client | ⬜ TODO | Backend Agent | 0/8 checkpoints |
 | 4 | Writer Agent | ⬜ TODO | Backend Agent | 0/9 checkpoints |
 | 5 | FastAPI Backend | ⬜ TODO | Backend Agent | 0/9 checkpoints |
@@ -78,25 +78,29 @@ Last Updated: 2026-02-02
 ## 📈 Cumulative Progress
 
 ```
-Sprint 1: █⬜⬜⬜⬜⬜⬜ 14%
+Sprint 1: ██⬜⬜⬜⬜⬜ 28%
 Sprint 2: ⬜⬜⬜⬜⬜ 0%
 Sprint 3: ⬜⬜⬜⬜⬜ 0%
 Sprint 4: ⬜⬜⬜⬜⬜ 0%
 
-Total:    █░░░░░░░░░░░░░░░░░░░ 4% Complete
+Total:    ██░░░░░░░░░░░░░░░░░░ 8% Complete
 ```
 
 ---
 
 ## 🎯 Current Focus
 
-**Active Task:** Task 2 - Base Agent Class (Ready to start)  
-**Next Task:** Sprint 1, Task 2 - Base Agent Class  
+**Active Task:** Creating Team Profile Page  
+**Next Task:** Sprint 1, Task 3 - LLM Client  
 **Blockers:** None
 
 ---
 
 ## ✅ Completed Milestones
+
+**2026-02-05:**
+- ✅ **Sprint 1, Task 2: BaseAgent Class** - Foundation class with logging, error handling, tests (PR #8 merged)
+- ✅ **Team Profile Created** - TEAM.md with creative AI agent names
 
 **2026-02-04:**
 - ✅ **Sprint 1, Task 1: Project Setup** - All folder structure created, dependencies configured, committed to Git (commit: 92c428a)
@@ -105,13 +109,18 @@ Total:    █░░░░░░░░░░░░░░░░░░░ 4% Comple
 
 ## 🚧 Recent Activity
 
+**2026-02-05:**
+- ✅ **Merged PR #8: BaseAgent Class** (via git commands - faster!)
+- ✅ Created TEAM.md with 6 AI agents: Chai, Sherlock, Quill, Wordsmith, Polly, Messenger
+- ✅ Task 2 complete - 28% Sprint 1 progress
+- 🔄 Ready to start Task 3: LLM Client
+
 **2026-02-04:**
 - ✅ Created GitHub Issues for all Sprint 1 tasks
 - ✅ Created progress tracker
 - ✅ **Completed Task 1: Project Setup** (all 5 checkpoints)
 - ✅ Committed initial structure to GitHub (92c428a)
 - ✅ Closed GitHub Issue #1
-- 🔄 Ready to start Task 2: Base Agent Class
 
 ---
 
