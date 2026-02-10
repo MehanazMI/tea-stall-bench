@@ -19,14 +19,15 @@ Last Updated: 2026-02-02
 
 ### Sprint 1: Foundation (Week 1-2)
 **Status:** 🔄 IN PROGRESS  
-**Progress:** 2/7 tasks complete (28%)  
+**Progress:** 3/7 tasks complete (42%)  
 **Start:** 2026-02-04  
 **Target End:** 2026-02-18
 
 | # | Task | Status | Assignee | Progress |
 |---|------|--------|----------|----------|
-| 1 | Project Setup | ✅ DONE | Chai (Team Lead) | 5/5 checkpoints |
-| 2 | Base Agent Class | ✅ DONE | Chai (Team Lead) | 8/8 checkpoints |
+| 1 | Project Setup | ✅ DONE | Brew (Team Lead) | 5/5 checkpoints |
+| 2 | Base Agent Class | ✅ DONE | Brew (Team Lead) | 8/8 checkpoints |
+| 3 | LLM Client | ✅ DONE | Brew (Team Lead) | 10/10 checkpoints |
 | 3 | LLM Client | ⬜ TODO | Backend Agent | 0/8 checkpoints |
 | 4 | Writer Agent | ⬜ TODO | Backend Agent | 0/9 checkpoints |
 | 5 | FastAPI Backend | ⬜ TODO | Backend Agent | 0/9 checkpoints |
@@ -78,29 +79,32 @@ Last Updated: 2026-02-02
 ## 📈 Cumulative Progress
 
 ```
-Sprint 1: ██⬜⬜⬜⬜⬜ 28%
+Sprint 1: ███⬜⬜⬜⬜ 42%
 Sprint 2: ⬜⬜⬜⬜⬜ 0%
 Sprint 3: ⬜⬜⬜⬜⬜ 0%
 Sprint 4: ⬜⬜⬜⬜⬜ 0%
 
-Total:    ██░░░░░░░░░░░░░░░░░░ 8% Complete
+Total:    ███░░░░░░░░░░░░░░░░░ 12% Complete
 ```
 
 ---
 
 ## 🎯 Current Focus
 
-**Active Task:** Creating Team Profile Page  
-**Next Task:** Sprint 1, Task 3 - LLM Client  
+**Active Task:** None - Task 3 just merged  
+**Next Task:** Sprint 1, Task 4 - Writer Agent  
 **Blockers:** None
 
 ---
 
 ## ✅ Completed Milestones
 
+**2026-02-09:**
+- ✅ **Sprint 1, Task 3: LLM Client** - Unified client for Ollama/OpenAI with retry logic (PR #9 merged, 16/16 tests passing)
+
 **2026-02-05:**
 - ✅ **Sprint 1, Task 2: BaseAgent Class** - Foundation class with logging, error handling, tests (PR #8 merged)
-- ✅ **Team Profile Created** - TEAM.md with creative AI agent names
+- ✅ **Team Profile Created** - TEAM.md with globally accessible team names
 
 **2026-02-04:**
 - ✅ **Sprint 1, Task 1: Project Setup** - All folder structure created, dependencies configured, committed to Git (commit: 92c428a)
@@ -109,11 +113,16 @@ Total:    ██░░░░░░░░░░░░░░░░░░ 8% Comple
 
 ## 🚧 Recent Activity
 
+**2026-02-09:**
+- ✅ **Merged PR #9: LLM Client** - All 16 tests passing!
+- ✅ Task 3 complete - 42% Sprint 1 progress
+- ✅ Beginner-friendly explanation provided for async concepts
+- 🔄 Ready to start Task 4: Writer Agent (Ink)
+
 **2026-02-05:**
-- ✅ **Merged PR #8: BaseAgent Class** (via git commands - faster!)
-- ✅ Created TEAM.md with 6 AI agents: Chai, Sherlock, Quill, Wordsmith, Polly, Messenger
+- ✅ **Merged PR #8: BaseAgent Class** (via git commands)
+- ✅ Created TEAM.md with global team names: Brew, Scout, Draft, Ink, Polish, Relay
 - ✅ Task 2 complete - 28% Sprint 1 progress
-- 🔄 Ready to start Task 3: LLM Client
 
 **2026-02-04:**
 - ✅ Created GitHub Issues for all Sprint 1 tasks
