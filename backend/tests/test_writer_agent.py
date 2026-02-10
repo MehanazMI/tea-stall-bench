@@ -108,6 +108,17 @@ class TestWriterAgentValidation:
             "style": "professional",
             "tone": "friendly"
         })
+    
+    def test_validate_invalid_length(self):
+        """Test that invalid length raises error."""
+        mock_client = MagicMock(spec=LLMClient)
+        agent = WriterAgent(mock_client)
+        
+        with pytest.raises(ValueError, match="Invalid length"):
+            agent._validate_input({
+                "topic": "Test",
+                "length": "invalid_length"
+            })
 
 
 class TestWriterAgentPromptBuilding:

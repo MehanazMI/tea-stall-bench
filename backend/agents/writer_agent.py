@@ -5,6 +5,7 @@ This agent generates written content (blog posts, articles, tutorials) using the
 It provides a clean interface for content creation with configurable styles and tones.
 """
 
+import re
 from typing import Dict, Any, Optional
 from backend.agents.base_agent import BaseAgent
 from backend.utils.llm_client import LLMClient
@@ -98,17 +99,20 @@ class WriterAgent(BaseAgent):
         
         self.logger.info(f"Generating {content_type} about '{topic}'")
         
+        # Determine temperature based on style
+        temperature = self._get_temperature_for_style(style)
+        
         # Generate content using LLM
         generated_content = await self.llm_client.generate(
             prompt=prompt,
-            temperature=0.7  # Balanced creativity
+            temperature=temperature
         )
         
         # Extract title and content
         title, content = self._parse_generated_content(generated_content)
         
-        # Calculate word count
-        word_count = len(content.split())
+        # Calculate word count using regex for accuracy
+        word_count = len(re.findall(r'\b\w+\b', content))
         
         return {
             'title': title,
@@ -158,6 +162,13 @@ class WriterAgent(BaseAgent):
             if input_data['tone'] not in self.TONES:
                 raise ValueError(
                     f"Invalid tone. Must be one of: {', '.join(self.TONES)}"
+                )
+        
+        # Validate length if provided
+        if 'length' in input_data:
+            if input_data['length'] not in self.LENGTHS:
+                raise ValueError(
+                    f"Invalid length. Must be one of: {', '.join(self.LENGTHS)}"
                 )
     
     def _build_prompt(
@@ -215,6 +226,26 @@ Begin with the title on the first line, then the content."""
         
         return prompt
     
+    def _get_temperature_for_style(self, style: str) -> float:
+        """
+        Get appropriate temperature setting based on writing style.
+        
+        Args:
+            style: Writing style
+            
+        Returns:
+            float: Temperature value (0.0-1.0)
+        """
+        # Different styles benefit from different creativity levels
+        temperature_map = {
+            'technical': 0.5,      # More factual, less creative
+            'creative': 0.9,       # Highly creative and varied
+            'professional': 0.7,   # Balanced
+            'casual': 0.8          # Slightly more creative
+        }
+        
+        return temperature_map.get(style, 0.7)
+    
     def _parse_generated_content(self, generated_content: str) -> tuple[str, str]:
         """
         Parse generated content to extract title and body.
@@ -230,11 +261,24 @@ Begin with the title on the first line, then the content."""
         if not lines:
             return "Untitled", generated_content
         
-        # First non-empty line is the title
-        title = lines[0].strip()
+        # Find the actual title (skip preamble lines like "Here's your blog post:")
+        title_line_index = 0
+        preamble_indicators = ['here', 'here\'s', 'below', 'following']
+        
+        for i, line in enumerate(lines[:3]):  # Check first 3 lines
+            line_lower = line.strip().lower()
+            # Skip lines that look like preamble
+            if any(indicator in line_lower for indicator in preamble_indicators):
+                continue
+            # Found likely title line
+            if line.strip():
+                title_line_index = i
+                break
+        
+        title = lines[title_line_index].strip()
         
         # Remove common title prefixes
-        title_prefixes = ['Title:', 'title:', '#', '##']
+        title_prefixes = ['Title:', 'title:', '#', '##', '###']
         for prefix in title_prefixes:
             if title.startswith(prefix):
                 title = title[len(prefix):].strip()
@@ -242,7 +286,7 @@ Begin with the title on the first line, then the content."""
         # Rest is content (skip empty lines after title)
         content_lines = []
         found_content = False
-        for line in lines[1:]:
+        for line in lines[title_line_index + 1:]:  # Start after title line
             if line.strip() or found_content:
                 content_lines.append(line)
                 found_content = True
