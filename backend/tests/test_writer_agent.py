@@ -231,14 +231,13 @@ This is a comprehensive tutorial."""
             "topic": "Python Basics",
             "content_type": "tutorial",
             "style": "technical",
-            "tone": "formal",
             "length": "long",
             "additional_context": "For advanced users"
         })
         
         assert result['status'] == 'success'
         assert result['metadata']['content_type'] == 'tutorial'
-        assert result['metadata']['style'] == 'professional' # Updated from voice
+        assert result['metadata']['style'] == 'technical'
     
     @pytest.mark.asyncio
     async def test_execute_calls_llm_client(self):
