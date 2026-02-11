@@ -34,37 +34,46 @@ class WriterAgent(BaseAgent):
     
     # Supported options
     CONTENT_TYPES = ['blog_post', 'article', 'tutorial', 'how_to_guide']
-    STYLES = ['professional', 'casual', 'technical', 'creative']
-    TONES = ['friendly', 'formal', 'conversational', 'authoritative']
+    
+    # Writing styles (unified style + tone) - ordered by temperature (factual → creative)
+    STYLES = [
+        'technical',       # Precise, factual, detailed (temp: 0.3)
+        'educational',     # Teaching, clear, structured (temp: 0.5)
+        'professional',    # Business-like, polished (temp: 0.6)
+        'friendly',        # Warm, casual, approachable (temp: 0.75)
+        'inspirational',   # Motivating, uplifting (temp: 0.8)
+        'storytelling'     # Narrative, engaging, compelling (temp: 0.9)
+    ]
     LENGTHS = ['short', 'medium', 'long']
-    CHANNELS = ['whatsapp', 'blog', 'linkedin', 'instagram', 'email']
+    CHANNELS = ['instagram', 'whatsapp', 'linkedin', 'email', 'blog']
     
     # Channel-specific length guidelines (in words)
+    # Ordered by word count: shortest → longest
     CHANNEL_LENGTH_GUIDES = {
+        'instagram': {
+            'short': '50-100 words',
+            'medium': '100-150 words',
+            'long': '150-200 words'
+        },
         'whatsapp': {
             'short': '100-200 words',
             'medium': '200-400 words',
             'long': '400-600 words'
-        },
-        'blog': {
-            'short': '300-500 words',
-            'medium': '600-1000 words',
-            'long': '1200-1800 words'
         },
         'linkedin': {
             'short': '150-300 words',
             'medium': '300-600 words',
             'long': '600-1000 words'
         },
-        'instagram': {
-            'short': '50-100 words',
-            'medium': '100-150 words',
-            'long': '150-200 words'
-        },
         'email': {
             'short': '200-400 words',
             'medium': '400-800 words',
             'long': '800-1200 words'
+        },
+        'blog': {
+            'short': '300-500 words',
+            'medium': '600-1000 words',
+            'long': '1200-1800 words'
         }
     }
     
@@ -92,7 +101,6 @@ class WriterAgent(BaseAgent):
                 - topic (str): The topic to write about (required)
                 - content_type (str): Type of content (default: 'blog_post')
                 - style (str): Writing style (default: 'professional')
-                - tone (str): Writing tone (default: 'friendly')
                 - length (str): Content length (default: 'medium')
                 - channel (str): Publishing channel (default: 'blog')
                 - additional_context (str): Extra context (optional)
@@ -114,7 +122,6 @@ class WriterAgent(BaseAgent):
         topic = input_data['topic']
         content_type = input_data.get('content_type', 'blog_post')
         style = input_data.get('style', 'professional')
-        tone = input_data.get('tone', 'friendly')
         length = input_data.get('length', 'medium')
         channel = input_data.get('channel', 'blog')
         additional_context = input_data.get('additional_context', '')
@@ -124,13 +131,12 @@ class WriterAgent(BaseAgent):
             topic=topic,
             content_type=content_type,
             style=style,
-            tone=tone,
             length=length,
             channel=channel,
             additional_context=additional_context
         )
         
-        self.logger.info(f"Generating {content_type} about '{topic}'")
+        self.logger.info(f"Generating {content_type} about '{topic}' with {style} style")
         
         # Determine temperature based on style
         temperature = self._get_temperature_for_style(style)
@@ -155,7 +161,6 @@ class WriterAgent(BaseAgent):
                 'topic': topic,
                 'content_type': content_type,
                 'style': style,
-                'tone': tone,
                 'length': length,
                 'channel': channel
             }
@@ -191,13 +196,6 @@ class WriterAgent(BaseAgent):
                     f"Invalid style. Must be one of: {', '.join(self.STYLES)}"
                 )
         
-        # Validate tone if provided
-        if 'tone' in input_data:
-            if input_data['tone'] not in self.TONES:
-                raise ValueError(
-                    f"Invalid tone. Must be one of: {', '.join(self.TONES)}"
-                )
-        
         # Validate length if provided
         if 'length' in input_data:
             if input_data['length'] not in self.LENGTHS:
@@ -224,7 +222,6 @@ class WriterAgent(BaseAgent):
         topic: str,
         content_type: str,
         style: str,
-        tone: str,
         length: str,
         channel: str,
         additional_context: str
@@ -236,7 +233,6 @@ class WriterAgent(BaseAgent):
             topic: Topic to write about
             content_type: Type of content
             style: Writing style
-            tone: Writing tone
             length: Desired length
             channel: Publishing channel
             additional_context: Additional context
@@ -249,16 +245,15 @@ class WriterAgent(BaseAgent):
         length_guide = channel_guides[length]
         
         # Build the prompt
-        prompt = f"""Write a {style} {content_type} about: {topic}
+        prompt = f"""Write a {content_type} about: {topic}
 
 Requirements:
-- Tone: {tone}
 - Style: {style}
 - Publishing channel: {channel}
 - Target length: {length_guide}
 - Format: Start with a clear title on the first line, followed by the content
 
-Note: Optimize content for {channel} platform.
+Note: Optimize content for {channel} platform with a {style} style.
 
 """
         
@@ -286,15 +281,17 @@ Begin with the title on the first line, then the content."""
         Returns:
             float: Temperature value (0.0-1.0)
         """
-        # Different styles benefit from different creativity levels
+        # Ordered by creativity level: factual → creative
         temperature_map = {
-            'technical': 0.5,      # More factual, less creative
-            'creative': 0.9,       # Highly creative and varied
-            'professional': 0.7,   # Balanced
-            'casual': 0.8          # Slightly more creative
+            'technical': 0.3,        # Precise, factual, minimal creativity
+            'educational': 0.5,      # Clear, structured, some examples
+            'professional': 0.6,     # Polished, controlled creativity
+            'friendly': 0.75,        # Natural, warm, conversational
+            'inspirational': 0.8,    # Engaging, motivating, creative
+            'storytelling': 0.9      # Highly creative, narrative
         }
         
-        return temperature_map.get(style, 0.7)
+        return temperature_map.get(style, 0.6)
     
     def _parse_generated_content(self, generated_content: str) -> tuple[str, str]:
         """

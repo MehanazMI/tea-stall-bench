@@ -74,8 +74,8 @@ class TestWriterAgentValidation:
                 "content_type": "invalid_type"
             })
     
-    def test_validate_invalid_style(self):
-        """Test that invalid style raises error."""
+    def test_validate_invalid_voice(self):
+        """Test that invalid voice raises error."""
         mock_client = MagicMock(spec=LLMClient)
         agent = WriterAgent(mock_client)
         
@@ -83,17 +83,6 @@ class TestWriterAgentValidation:
             agent._validate_input({
                 "topic": "Test",
                 "style": "invalid_style"
-            })
-    
-    def test_validate_invalid_tone(self):
-        """Test that invalid tone raises error."""
-        mock_client = MagicMock(spec=LLMClient)
-        agent = WriterAgent(mock_client)
-        
-        with pytest.raises(ValueError, match="Invalid tone"):
-            agent._validate_input({
-                "topic": "Test",
-                "tone": "invalid_tone"
             })
     
     def test_validate_valid_input(self):
@@ -105,8 +94,7 @@ class TestWriterAgentValidation:
         agent._validate_input({
             "topic": "Python Tips",
             "content_type": "blog_post",
-            "style": "professional",
-            "tone": "friendly"
+            "style": "professional"
         })
     
     def test_validate_invalid_length(self):
@@ -132,8 +120,7 @@ class TestWriterAgentPromptBuilding:
         prompt = agent._build_prompt(
             topic="Python Tips",
             content_type="blog_post",
-            style="professional",
-            tone="friendly",
+            voice="professional",
             length="medium",
             channel="blog",
             additional_context=""
@@ -142,7 +129,6 @@ class TestWriterAgentPromptBuilding:
         assert "Python Tips" in prompt
         assert "blog_post" in prompt
         assert "professional" in prompt
-        assert "friendly" in prompt
     
     def test_build_prompt_with_context(self):
         """Test building prompt with additional context."""
@@ -152,8 +138,7 @@ class TestWriterAgentPromptBuilding:
         prompt = agent._build_prompt(
             topic="Python Tips",
             content_type="blog_post",
-            style="professional",
-            tone="friendly",
+            voice="professional",
             length="medium",
             channel="blog",
             additional_context="Focus on beginners"
@@ -253,8 +238,7 @@ This is a comprehensive tutorial."""
         
         assert result['status'] == 'success'
         assert result['metadata']['content_type'] == 'tutorial'
-        assert result['metadata']['style'] == 'technical'
-        assert result['metadata']['tone'] == 'formal'
+        assert result['metadata']['style'] == 'professional' # Updated from voice
     
     @pytest.mark.asyncio
     async def test_execute_calls_llm_client(self):
