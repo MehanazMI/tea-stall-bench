@@ -120,7 +120,7 @@ class TestWriterAgentPromptBuilding:
         prompt = agent._build_prompt(
             topic="Python Tips",
             content_type="blog_post",
-            voice="professional",
+            style="professional",
             length="medium",
             channel="blog",
             additional_context=""
@@ -138,7 +138,7 @@ class TestWriterAgentPromptBuilding:
         prompt = agent._build_prompt(
             topic="Python Tips",
             content_type="blog_post",
-            voice="professional",
+            style="professional",
             length="medium",
             channel="blog",
             additional_context="Focus on beginners"
