@@ -135,6 +135,7 @@ class TestWriterAgentPromptBuilding:
             style="professional",
             tone="friendly",
             length="medium",
+            channel="blog",
             additional_context=""
         )
         
@@ -154,6 +155,7 @@ class TestWriterAgentPromptBuilding:
             style="professional",
             tone="friendly",
             length="medium",
+            channel="blog",
             additional_context="Focus on beginners"
         )
         

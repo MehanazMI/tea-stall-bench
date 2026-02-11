@@ -3,7 +3,7 @@ Writer Agent (Ink) for Tea Stall Bench
 
 This agent generates written content (blog posts, articles, tutorials) using the LLM Client.
 It provides a clean interface for content creation with configurable styles and tones.
-"""
+""" 
 
 import re
 from typing import Dict, Any, Optional
@@ -37,6 +37,36 @@ class WriterAgent(BaseAgent):
     STYLES = ['professional', 'casual', 'technical', 'creative']
     TONES = ['friendly', 'formal', 'conversational', 'authoritative']
     LENGTHS = ['short', 'medium', 'long']
+    CHANNELS = ['whatsapp', 'blog', 'linkedin', 'instagram', 'email']
+    
+    # Channel-specific length guidelines (in words)
+    CHANNEL_LENGTH_GUIDES = {
+        'whatsapp': {
+            'short': '100-200 words',
+            'medium': '200-400 words',
+            'long': '400-600 words'
+        },
+        'blog': {
+            'short': '300-500 words',
+            'medium': '600-1000 words',
+            'long': '1200-1800 words'
+        },
+        'linkedin': {
+            'short': '150-300 words',
+            'medium': '300-600 words',
+            'long': '600-1000 words'
+        },
+        'instagram': {
+            'short': '50-100 words',
+            'medium': '100-150 words',
+            'long': '150-200 words'
+        },
+        'email': {
+            'short': '200-400 words',
+            'medium': '400-800 words',
+            'long': '800-1200 words'
+        }
+    }
     
     def __init__(self, llm_client: LLMClient):
         """
@@ -64,6 +94,7 @@ class WriterAgent(BaseAgent):
                 - style (str): Writing style (default: 'professional')
                 - tone (str): Writing tone (default: 'friendly')
                 - length (str): Content length (default: 'medium')
+                - channel (str): Publishing channel (default: 'blog')
                 - additional_context (str): Extra context (optional)
         
         Returns:
@@ -85,6 +116,7 @@ class WriterAgent(BaseAgent):
         style = input_data.get('style', 'professional')
         tone = input_data.get('tone', 'friendly')
         length = input_data.get('length', 'medium')
+        channel = input_data.get('channel', 'blog')
         additional_context = input_data.get('additional_context', '')
         
         # Build prompt
@@ -94,6 +126,7 @@ class WriterAgent(BaseAgent):
             style=style,
             tone=tone,
             length=length,
+            channel=channel,
             additional_context=additional_context
         )
         
@@ -123,7 +156,8 @@ class WriterAgent(BaseAgent):
                 'content_type': content_type,
                 'style': style,
                 'tone': tone,
-                'length': length
+                'length': length,
+                'channel': channel
             }
         }
     
@@ -170,6 +204,20 @@ class WriterAgent(BaseAgent):
                 raise ValueError(
                     f"Invalid length. Must be one of: {', '.join(self.LENGTHS)}"
                 )
+        
+        # Validate channel if provided
+        if 'channel' in input_data:
+            if input_data['channel'] not in self.CHANNELS:
+                raise ValueError(
+                    f"Invalid channel. Must be one of: {', '.join(self.CHANNELS)}"
+                )
+        
+        # Validate channel if provided
+        if 'channel' in input_data:
+            if input_data['channel'] not in self.CHANNELS:
+                raise ValueError(
+                    f"Invalid channel. Must be one of: {', '.join(self.CHANNELS)}"
+                )
     
     def _build_prompt(
         self,
@@ -178,6 +226,7 @@ class WriterAgent(BaseAgent):
         style: str,
         tone: str,
         length: str,
+        channel: str,
         additional_context: str
     ) -> str:
         """
@@ -189,17 +238,15 @@ class WriterAgent(BaseAgent):
             style: Writing style
             tone: Writing tone
             length: Desired length
+            channel: Publishing channel
             additional_context: Additional context
             
         Returns:
             str: Formatted prompt for LLM
         """
-        # Length guidelines
-        length_guide = {
-            'short': '300-500 words',
-            'medium': '600-1000 words',
-            'long': '1200-1800 words'
-        }
+        # Get channel-specific length guidelines
+        channel_guides = self.CHANNEL_LENGTH_GUIDES.get(channel, self.CHANNEL_LENGTH_GUIDES['blog'])
+        length_guide = channel_guides[length]
         
         # Build the prompt
         prompt = f"""Write a {style} {content_type} about: {topic}
@@ -207,8 +254,11 @@ class WriterAgent(BaseAgent):
 Requirements:
 - Tone: {tone}
 - Style: {style}
-- Target length: {length_guide.get(length, '600-1000 words')}
+- Publishing channel: {channel}
+- Target length: {length_guide}
 - Format: Start with a clear title on the first line, followed by the content
+
+Note: Optimize content for {channel} platform.
 
 """
         
