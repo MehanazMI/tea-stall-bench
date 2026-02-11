@@ -53,7 +53,7 @@ class TestWriterAgentValidation:
         agent = WriterAgent(mock_client)
         
         with pytest.raises(ValueError, match="Topic is required"):
-            agent._validate_input({"content_type": "blog_post"})
+            agent._validate_input({"content_type": "blog"})
     
     def test_validate_empty_topic(self):
         """Test that empty topic string raises error."""
@@ -93,7 +93,7 @@ class TestWriterAgentValidation:
         # Should not raise
         agent._validate_input({
             "topic": "Python Tips",
-            "content_type": "blog_post",
+            "content_type": "blog",
             "style": "professional"
         })
     
@@ -119,7 +119,7 @@ class TestWriterAgentPromptBuilding:
         
         prompt = agent._build_prompt(
             topic="Python Tips",
-            content_type="blog_post",
+            content_type="blog",
             style="professional",
             length="medium",
             channel="blog",
@@ -127,7 +127,7 @@ class TestWriterAgentPromptBuilding:
         )
         
         assert "Python Tips" in prompt
-        assert "blog_post" in prompt
+        assert "blog" in prompt
         assert "professional" in prompt
     
     def test_build_prompt_with_context(self):
@@ -137,7 +137,7 @@ class TestWriterAgentPromptBuilding:
         
         prompt = agent._build_prompt(
             topic="Python Tips",
-            content_type="blog_post",
+            content_type="blog",
             style="professional",
             length="medium",
             channel="blog",
@@ -197,7 +197,7 @@ class TestWriterAgentExecution:
     """Test suite for content generation."""
     
     @pytest.mark.asyncio
-    async def test_execute_basic_blog_post(self):
+    async def test_execute_basic_blog(self):
         """Test generating a basic blog post."""
         mock_client = AsyncMock(spec=LLMClient)
         mock_client.generate.return_value = """Writing Great Code

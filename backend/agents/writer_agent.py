@@ -13,27 +13,35 @@ from backend.utils.llm_client import LLMClient
 
 class WriterAgent(BaseAgent):
     """
-    Agent that generates written content using LLM.
+    Writer Agent (Ink) - Content generation specialist.
     
-    Supports various content types (blog posts, articles, tutorials),
-    writing styles (professional, casual, technical), and tones
-    (friendly, formal, conversational).
+    Generates written content optimized for different platforms with configurable
+    styles and formats. Optimized for WhatsApp publishing with storytelling narratives.
+    
+    Default Configuration (WhatsApp-optimized):
+        - content_type: 'story' (engaging narratives)
+        - style: 'storytelling' (creative, narrative, temp: 0.9)
+        - channel: 'whatsapp' (mobile-friendly, 100-200 words)
+        - length: 'short' (quick reads)
+    
+    Supports 6 content types, 6 styles, 5 channels, and 3 lengths.
     
     Example:
         >>> llm_client = LLMClient()
         >>> writer = WriterAgent(llm_client)
-        >>> result = await writer.execute({
-        ...     "topic": "Python Tips for Beginners",
-        ...     "content_type": "blog_post",
-        ...     "style": "professional",
-        ...     "tone": "friendly"
-        ... })
-        >>> print(result['title'])
-        >>> print(result['content'])
+        >>> result = await writer.execute({"topic": "Python Tips"})
+        >>> print(result['title'], result['content'])
     """
     
     # Supported options
-    CONTENT_TYPES = ['blog_post', 'article', 'tutorial', 'how_to_guide']
+    CONTENT_TYPES = [
+        'post',        # Short-form (social media, WhatsApp)
+        'blog',        # Blog article
+        'tutorial',    # Teaching/how-to
+        'listicle',    # List-based ("10 Tips...")
+        'newsletter',  # Email format
+        'story'        # Narrative content
+    ]
     
     # Writing styles (unified style + tone) - ordered by temperature (factual → creative)
     STYLES = [
@@ -99,10 +107,10 @@ class WriterAgent(BaseAgent):
         Args:
             input_data (Dict[str, Any]): Input containing:
                 - topic (str): The topic to write about (required)
-                - content_type (str): Type of content (default: 'blog_post')
-                - style (str): Writing style (default: 'professional')
-                - length (str): Content length (default: 'medium')
-                - channel (str): Publishing channel (default: 'blog')
+                - content_type (str): Type of content (default: 'story')
+                - style (str): Writing style (default: 'storytelling')
+                - length (str): Content length (default: 'short')
+                - channel (str): Publishing channel (default: 'whatsapp')
                 - additional_context (str): Extra context (optional)
         
         Returns:
@@ -120,10 +128,10 @@ class WriterAgent(BaseAgent):
         
         # Extract parameters
         topic = input_data['topic']
-        content_type = input_data.get('content_type', 'blog_post')
-        style = input_data.get('style', 'professional')
-        length = input_data.get('length', 'medium')
-        channel = input_data.get('channel', 'blog')
+        content_type = input_data.get('content_type', 'story')
+        style = input_data.get('style', 'storytelling')
+        length = input_data.get('length', 'short')
+        channel = input_data.get('channel', 'whatsapp')
         additional_context = input_data.get('additional_context', '')
         
         # Build prompt

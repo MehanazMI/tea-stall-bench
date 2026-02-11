@@ -71,8 +71,8 @@ class TestWriterAgentChannels:
         assert "100-150 words" in call_args.kwargs['prompt']
     
     @pytest.mark.asyncio
-    async def test_channel_defaults_to_blog(self):
-        """Test that channel defaults to 'blog' if not specified."""
+    async def test_channel_defaults_to_whatsapp(self):
+        """Test that channel defaults to 'whatsapp' if not specified."""
         mock_client = AsyncMock(spec=LLMClient)
         mock_client.generate.return_value = "Title\\nContent"
         
@@ -81,7 +81,7 @@ class TestWriterAgentChannels:
             "topic": "Test"
         })
         
-        assert result['metadata']['channel'] == 'blog'
+        assert result['metadata']['channel'] == 'whatsapp'
     
     @pytest.mark.asyncio
     async def test_linkedin_channel_length(self):
