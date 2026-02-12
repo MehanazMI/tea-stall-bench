@@ -149,8 +149,8 @@ class TestPublisherAgentExecution:
         mock_client = MagicMock(spec=LLMClient)
         agent = PublisherAgent(mock_client)
         
-        with patch.object(agent.whatsapp_client, 'send_instant') as mock_instant:
-            mock_instant.return_value = {
+        with patch.object(agent.whatsapp_client, 'send_with_review') as mock_review:
+            mock_review.return_value = {
                 'status': 'ready',
                 'phone_number': '+12345678900'
             }

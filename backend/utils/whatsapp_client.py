@@ -162,15 +162,15 @@ class WhatsAppClient:
             self.logger.error(f"Failed to send message: {str(e)}")
             raise Exception(f"WhatsApp send failed: {str(e)}")
     
-    def send_instant(
+    def send_with_review(
         self,
         phone_number: str,
         message: str
     ) -> Dict[str, Any]:
         """
-        Send message instantly (opens WhatsApp Web with message ready).
+        Send message with manual review (opens WhatsApp Web with message ready).
         
-        User must click Send manually. Useful for testing.
+        User must click Send manually. Useful for testing and review.
         
         Args:
             phone_number: Phone number with country code
@@ -182,7 +182,7 @@ class WhatsAppClient:
         formatted_phone = self.validate_phone_number(phone_number)
         formatted_message = self.format_content(message)
         
-        self.logger.info(f"Preparing instant message to {formatted_phone}")
+        self.logger.info(f"Preparing message for manual review: {formatted_phone}")
         
         try:
             # Open WhatsApp Web with message
@@ -202,3 +202,4 @@ class WhatsAppClient:
         except Exception as e:
             self.logger.error(f"Failed to prepare message: {str(e)}")
             raise Exception(f"WhatsApp preparation failed: {str(e)}")
+

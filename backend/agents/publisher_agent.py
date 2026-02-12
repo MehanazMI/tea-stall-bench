@@ -81,7 +81,7 @@ class PublisherAgent(BaseAgent):
                 result = self.whatsapp_client.send_message(phone_number, message)
                 delivery = 'automatic'
             else:
-                result = self.whatsapp_client.send_instant(phone_number, message)
+                result = self.whatsapp_client.send_with_review(phone_number, message)
                 delivery = 'manual_review'
             
             return {
