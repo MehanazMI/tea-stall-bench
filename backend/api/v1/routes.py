@@ -3,10 +3,8 @@ API route handlers for Tea Stall Bench.
 """
 
 import logging
-from typing import Dict, Any
 
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import JSONResponse
 
 from backend.utils.llm_client import LLMClient
 from backend.agents.writer_agent import WriterAgent
@@ -27,14 +25,17 @@ logger = logging.getLogger("TeaStallBench.API.Routes")
 
 router = APIRouter()
 
+
 # Dependency injection for agents
 def get_llm_client():
     """Get LLM client instance."""
     return LLMClient()
 
+
 def get_writer_agent(llm_client: LLMClient = Depends(get_llm_client)):
     """Get Writer agent instance."""
     return WriterAgent(llm_client)
+
 
 def get_publisher_agent(llm_client: LLMClient = Depends(get_llm_client)):
     """Get Publisher agent instance."""
@@ -49,9 +50,9 @@ async def generate_content(
     """
     Generate content using Writer Agent.
     
-    - **topic**: Topic to write about (required)
+    - **topic**: Topic to write about (required, min 3 chars)
     - **style**: Writing style (optional, default: storytelling)
-    - **max_length**: Maximum content length (optional)
+    - **max_length**: Maximum content length in words (optional, 50-5000)
     """
     try:
         logger.info(f"Generating content for topic: {request.topic}")
@@ -70,6 +71,9 @@ async def generate_content(
             word_count=result["word_count"]
         )
         
+    except ValueError as e:
+        logger.warning(f"Validation error: {str(e)}")
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         logger.error(f"Generation failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
@@ -83,7 +87,7 @@ async def publish_content(
     """
     Publish content to WhatsApp.
     
-    - **phone_number**: Phone with country code (required)
+    - **phone_number**: Phone with country code, e.g. +12345678900 (required)
     - **content**: Content to publish (required)
     - **title**: Optional title
     - **auto_send**: True for automatic, False for manual review
@@ -106,6 +110,9 @@ async def publish_content(
             sent_at=result.get("sent_at")
         )
         
+    except ValueError as e:
+        logger.warning(f"Validation error: {str(e)}")
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         logger.error(f"Publishing failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Publishing failed: {str(e)}")
@@ -150,6 +157,9 @@ async def generate_and_publish(
             sent_at=pub_result.get("sent_at")
         )
         
+    except ValueError as e:
+        logger.warning(f"Validation error: {str(e)}")
+        raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         logger.error(f"Pipeline failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {str(e)}")
@@ -159,11 +169,12 @@ async def generate_and_publish(
 async def get_styles():
     """Get available writing styles."""
     styles = [
-        {"name": "storytelling", "description": "Engaging narrative style with examples"},
-        {"name": "professional", "description": "Formal, business-appropriate tone"},
-        {"name": "casual", "description": "Friendly, conversational approach"},
+        {"name": "technical", "description": "Precise, factual, and detailed"},
         {"name": "educational", "description": "Clear, instructional format"},
-        {"name": "inspirational", "description": "Motivational and uplifting"}
+        {"name": "professional", "description": "Formal, business-appropriate tone"},
+        {"name": "friendly", "description": "Warm, casual, approachable"},
+        {"name": "inspirational", "description": "Motivational and uplifting"},
+        {"name": "storytelling", "description": "Engaging narrative style with examples"}
     ]
     return StylesResponse(styles=styles)
 
