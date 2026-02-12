@@ -49,7 +49,7 @@ class PublisherAgent(BaseAgent):
                 - phone_number (str): WhatsApp number with country code (required)
                 - content (str): Message content to send (required)
                 - title (str): Optional title to prepend
-                - instant (bool): If True, open WhatsApp for manual send (default: False)
+                - auto_send (bool): If True, send automatically; if False, open for manual review (default: True)
         
         Returns:
             Dict[str, Any]: Result containing:
@@ -68,7 +68,7 @@ class PublisherAgent(BaseAgent):
         phone_number = input_data['phone_number']
         content = input_data['content']
         title = input_data.get('title', '')
-        instant = input_data.get('instant', False)
+        auto_send = input_data.get('auto_send', True)  # Default: automatic
         
         # Format message
         message = self._format_message(content, title)
@@ -77,17 +77,19 @@ class PublisherAgent(BaseAgent):
         
         try:
             # Send message
-            if instant:
-                result = self.whatsapp_client.send_instant(phone_number, message)
-            else:
+            if auto_send:
                 result = self.whatsapp_client.send_message(phone_number, message)
+                delivery = 'automatic'
+            else:
+                result = self.whatsapp_client.send_instant(phone_number, message)
+                delivery = 'manual_review'
             
             return {
                 'status': 'success',
                 'phone_number': result['phone_number'],
                 'message_length': result.get('message_length', len(message)),
-                'sent_at': result.get('sent_at', 'instant'),
-                'delivery_method': 'instant' if instant else 'scheduled'
+                'sent_at': result.get('sent_at', 'pending'),
+                'delivery_method': delivery
             }
             
         except Exception as e:

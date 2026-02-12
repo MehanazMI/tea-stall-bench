@@ -105,20 +105,20 @@ class TestPublisherAgentExecution:
         # Mock WhatsApp client
         with patch.object(agent.whatsapp_client, 'send_message') as mock_send:
             mock_send.return_value = {
-                'phone_number': '+1234567890',
+                'phone_number': '+12345678900',
                 'message_length': 11,
                 'sent_at': '2026-02-10T23:30:00'
             }
             
             result = await agent.execute({
-                "phone_number": "+1234567890",
+                "phone_number": "+12345678900",
                 "content": "Hello World"
             })
             
             assert result['status'] == 'success'
-            assert result['phone_number'] == '+1234567890'
+            assert result['phone_number'] == '+12345678900'
             assert result['message_length'] == 11
-            assert result['delivery_method'] == 'scheduled'
+            assert result['delivery_method'] == 'automatic'
     
     @pytest.mark.asyncio
     async def test_execute_with_title(self):
@@ -144,25 +144,25 @@ class TestPublisherAgentExecution:
             assert "*Greeting*" in call_args[0][1]  # Title in message
     
     @pytest.mark.asyncio
-    async def test_execute_instant_mode(self):
-        """Test publishing in instant mode."""
+    async def test_execute_manual_review_mode(self):
+        """Test publishing in manual review mode."""
         mock_client = MagicMock(spec=LLMClient)
         agent = PublisherAgent(mock_client)
         
         with patch.object(agent.whatsapp_client, 'send_instant') as mock_instant:
             mock_instant.return_value = {
                 'status': 'ready',
-                'phone_number': '+1234567890'
+                'phone_number': '+12345678900'
             }
             
             result = await agent.execute({
-                "phone_number": "+1234567890",
+                "phone_number": "+12345678900",
                 "content": "Hello World",
-                "instant": True
+                "auto_send": False  # Manual review mode
             })
             
             assert result['status'] == 'success'
-            assert result['delivery_method'] == 'instant'
+            assert result['delivery_method'] == 'manual_review'
     
     @pytest.mark.asyncio
     async def test_execute_handles_errors(self):
