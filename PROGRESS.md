@@ -19,7 +19,7 @@ Last Updated: 2026-02-12
 
 ### Sprint 1: Foundation (Week 1-2)
 **Status:** 🔄 IN PROGRESS  
-**Progress:** 5/7 tasks complete (71%)  
+**Progress:** 6/7 tasks complete (86%)  
 **Start:** 2026-02-04  
 **Target End:** 2026-02-18
 
@@ -29,8 +29,8 @@ Last Updated: 2026-02-12
 | 2 | Base Agent Class | ✅ DONE | Brew (Team Lead) | 8/8 checkpoints |
 | 3 | LLM Client | ✅ DONE | Brew (Team Lead) | 10/10 checkpoints |
 | 4 | Writer Agent (Ink) | ✅ DONE | Brew (Team Lead) | 9/9 checkpoints |
-| 5 | **Publisher Agent (Relay)** | ✅ **DONE** | **Brew (Team Lead)** | **8/8 checkpoints** |
-| 6 | FastAPI Backend | 🔄 IN PROGRESS | Backend Agent | 0/12 checkpoints |
+| 5 | Publisher Agent (Relay) | ✅ DONE | Brew (Team Lead) | 8/8 checkpoints |
+| 6 | **FastAPI Backend** | ✅ **DONE** | **Brew (Team Lead)** | **13/13 tests** |
 | 7 | Integration & Testing | ⬜ TODO | Testing Agent | 0/7 checkpoints |
 
 **Sprint 1 Goal:** Single-agent content generator working end-to-end
