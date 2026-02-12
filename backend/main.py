@@ -6,15 +6,10 @@ REST API exposing Writer and Publisher agents.
 
 import logging
 from contextlib import asynccontextmanager
-from typing import Dict, Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
-from backend.utils.llm_client import LLMClient
-from backend.agents.writer_agent import WriterAgent
-from backend.agents.publisher_agent import PublisherAgent
 
 # Configure logging
 logging.basicConfig(
@@ -23,28 +18,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger("TeaStallBench.API")
 
-# Global instances
-llm_client: LLMClient = None
-writer_agent: WriterAgent = None
-publisher_agent: PublisherAgent = None
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
     Lifecycle manager for FastAPI app.
-    Initializes agents on startup, cleans up on shutdown.
     """
-    global llm_client, writer_agent, publisher_agent
-    
     logger.info("Starting Tea Stall Bench API...")
-    
-    # Initialize LLM client and agents
-    llm_client = LLMClient()
-    writer_agent = WriterAgent(llm_client)
-    publisher_agent = PublisherAgent(llm_client)
-    
-    logger.info("All agents initialized successfully")
+    logger.info("Agents will be initialized per-request via dependency injection")
     
     yield
     
@@ -69,10 +50,9 @@ app.add_middleware(
 )
 
 
-# Import routes
+# Import and include routes
 from backend.api.v1 import routes
 
-# Include API routes
 app.include_router(routes.router, prefix="/api/v1", tags=["v1"])
 
 
