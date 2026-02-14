@@ -168,9 +168,10 @@ class WhatsAppClient:
         message: str
     ) -> Dict[str, Any]:
         """
-        Send message with manual review (opens WhatsApp Web with message ready).
+        Open WhatsApp Web with message pre-filled for manual review.
         
-        User must click Send manually. Useful for testing and review.
+        User must click Send manually. Message is NOT sent automatically.
+        Uses WhatsApp's URL API to pre-fill the message without auto-sending.
         
         Args:
             phone_number: Phone number with country code
@@ -179,23 +180,29 @@ class WhatsAppClient:
         Returns:
             Dict with status information
         """
+        import webbrowser
+        import urllib.parse
+        
         formatted_phone = self.validate_phone_number(phone_number)
         formatted_message = self.format_content(message)
         
         self.logger.info(f"Preparing message for manual review: {formatted_phone}")
         
         try:
-            # Open WhatsApp Web with message
-            kit.sendwhatmsg_instantly(
-                formatted_phone,
-                formatted_message,
-                wait_time=10,
-                tab_close=False
-            )
+            # Use WhatsApp's URL API — opens chat with message pre-filled
+            # but does NOT press Send (unlike pywhatkit which uses pyautogui)
+            encoded_message = urllib.parse.quote(formatted_message)
+            phone_digits = formatted_phone.lstrip('+')
+            url = f"https://web.whatsapp.com/send?phone={phone_digits}&text={encoded_message}"
+            
+            webbrowser.open(url)
+            
+            self.logger.info(f"WhatsApp Web opened for review: {formatted_phone}")
             
             return {
                 "status": "ready",
                 "phone_number": formatted_phone,
+                "message_length": len(formatted_message),
                 "message": "WhatsApp Web opened. Click Send to deliver message."
             }
             

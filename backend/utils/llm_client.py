@@ -33,12 +33,15 @@ class LLMClient:
         >>> response = await client.generate("Write a blog post about Python")
     """
     
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, provider="ollama", model="llama3.2", api_key=None, base_url=None):
         """
-        Initialize the LLM client with configuration from environment variables.
+        Initialize LLM Client.
         
         Args:
-            config_path (Optional[str]): Path to .env file. If None, uses default search.
+            provider: "ollama" or "openai" (default: "ollama")
+            model: Model name (default: "llama3.2")
+            api_key: API key (optional, for OpenAI)
+            base_url: Base URL (optional, for Ollama)
         
         Raises:
             ValueError: If LLM_TYPE is not 'ollama' or 'openai'
@@ -46,49 +49,26 @@ class LLMClient:
         """
         self.logger = logging.getLogger("TeaStallBench.LLMClient")
         
-        # Load configuration
-        self._load_config(config_path)
-        
-        # Initialize the appropriate client
-        self._initialize_client()
-        
-        self.logger.info(f"LLM Client initialized: {self.llm_type} with model {self.model_name}")
-    
-    def _load_config(self, config_path: Optional[str] = None):
-        """
-        Load configuration from environment variables.
-        
-        Args:
-            config_path (Optional[str]): Path to .env file
-        """
-        # Load .env file
-        if config_path:
-            load_dotenv(config_path)
-        else:
-            load_dotenv()
-        
-        # Get LLM type (ollama or openai)
-        self.llm_type = os.getenv('LLM_TYPE', 'ollama').lower()
-        
+        # Load config from environment if not provided
+        # This ensures .env is loaded if parameters are not explicitly passed
+        load_dotenv()
+            
+        self.llm_type = (provider or os.getenv("LLM_TYPE", "ollama")).lower()
+        self.model_name = model or os.getenv("MODEL_NAME", "llama3.2")
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        self.base_url = base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
         if self.llm_type not in ['ollama', 'openai']:
             raise ValueError(
                 f"Invalid LLM_TYPE: {self.llm_type}. Must be 'ollama' or 'openai'"
             )
         
-        # Get model name
-        default_model = 'llama3' if self.llm_type == 'ollama' else 'gpt-4'
-        self.model_name = os.getenv('MODEL_NAME', default_model)
-        
-        # Get OpenAI API key if using OpenAI
-        if self.llm_type == 'openai':
-            self.api_key = os.getenv('OPENAI_API_KEY')
-            if not self.api_key:
-                raise ValueError(
-                    "OPENAI_API_KEY environment variable is required when LLM_TYPE=openai"
-                )
-    
-    def _initialize_client(self):
-        """Initialize the appropriate LLM client based on configuration."""
+        if self.llm_type == 'openai' and not self.api_key:
+            raise ValueError(
+                "OPENAI_API_KEY environment variable or 'api_key' parameter is required when LLM_TYPE=openai"
+            )
+
+        # Initialize the appropriate client
         if self.llm_type == 'ollama':
             import ollama
             self.client = ollama
@@ -98,6 +78,8 @@ class LLMClient:
             from openai import AsyncOpenAI
             self.client = AsyncOpenAI(api_key=self.api_key)
             self.logger.debug("Initialized OpenAI client")
+        
+        self.logger.info(f"LLM Client initialized: {self.llm_type} with model {self.model_name}")
     
     @retry(
         stop=stop_after_attempt(3),
