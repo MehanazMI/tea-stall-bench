@@ -100,7 +100,7 @@ Total:    ██████░░░░░░░░░░░░░░ 25% Compl
 
 **2026-02-13:**
 - ✅ **Sprint 1 Complete!** - Task 7 merged (Integration & Testing) with 100% pass rate.
-- ✅ **Live Demo Success** - Verified Malayalam poem generation and WhatsApp delivery.
+- ✅ **Live Demo Success** - Verified multi-language poem generation and WhatsApp delivery.
 
 **2026-02-10:**
 - ✅ **Sprint 1, Task 4: Writer Agent** - Content generation agent with styles/tones (PR #10 merged, 22/22 tests passing)
