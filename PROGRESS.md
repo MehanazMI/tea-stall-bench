@@ -25,15 +25,15 @@ Last Updated: 2026-02-14
 
 | # | Task | Status | Assignee | Progress |
 |---|------|--------|----------|----------|
-| 1 | Project Setup | ✅ DONE | Brew (Team Lead) | 5/5 checkpoints |
-| 2 | Base Agent Class | ✅ DONE | Brew (Team Lead) | 8/8 checkpoints |
-| 3 | LLM Client | ✅ DONE | Brew (Team Lead) | 10/10 checkpoints |
-| 4 | Writer Agent (Ink) | ✅ DONE | Brew (Team Lead) | 9/9 checkpoints |
-| 5 | Publisher Agent (Relay) | ✅ DONE | Brew (Team Lead) | 8/8 checkpoints |
-| 6 | FastAPI Backend | ✅ DONE | Brew (Team Lead) | 13/13 tests |
-| 7 | **Integration & Testing** | ✅ **DONE** | **Testing Agent** | **7/7 checkpoints** |
+| 1 | Project Setup | ✅ DONE | 🎩 Brew (Lead) | 5/5 checkpoints |
+| 2 | Base Agent Class | ✅ DONE | 🎩 Brew (Lead) | 8/8 checkpoints |
+| 3 | LLM Client | ✅ DONE | 🎩 Brew (Lead) | 10/10 checkpoints |
+| 4 | Writer Agent | ✅ DONE | ✍️ Ink (Writer) | 9/9 checkpoints |
+| 5 | Publisher Agent | ✅ DONE | 📱 Relay (Pub) | 8/8 checkpoints |
+| 6 | FastAPI Backend | ✅ DONE | 🎩 Brew (Backend)| 13/13 tests |
+| 7 | **Integration & Testing** | ✅ **DONE** | 🧪 **Quality Ops** | **7/7 checkpoints** |
 
-**Sprint 1 Goal:** Single-agent content generator working end-to-end
+**Sprint 1 Goal:** Writer & Publisher pipeline working end-to-end
 
 ---
 
