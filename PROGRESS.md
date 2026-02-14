@@ -78,8 +78,11 @@ Last Updated: 2026-02-14
 ## 📈 Cumulative Progress
 
 **Sprint 1:** `🍵🍵🍵🍵🍵🍵🍵` (7/7) ✨ **DONE**
+
 **Sprint 2:** `⬜⬜⬜⬜⬜` (0/5) *Next*
+
 **Sprint 3:** `⬜⬜⬜⬜⬜` (0/5)
+
 **Sprint 4:** `⬜⬜⬜⬜⬜` (0/5)
 
 > **Total:** 32% Complete (7/22 Tasks) 🚀
