@@ -126,11 +126,11 @@ We believe that AI agents should work together like a close-knit team, each brin
 **Sprint 1:** Foundation  
 - ✅ Task 1: Project Setup - Complete
 - ✅ Task 2: BaseAgent Class - Complete & Merged
-- 🔄 Task 3: LLM Client - Next up
-- ⬜ Task 4: Ink (Writer Agent) - Coming soon
-- ⬜ Task 5: FastAPI Backend - Coming soon
-- ⬜ Task 6: Frontend UI - Coming soon
-- ⬜ Task 7: Integration & Testing - Coming soon
+- ✅ Task 3: LLM Client - Complete
+- ✅ Task 4: Writer Agent (Ink) - Complete
+- ✅ Task 5: Publisher Agent (Relay) - Complete
+- ✅ Task 6: FastAPI Backend - Complete
+- ✅ Task 7: Integration & Testing - Complete
 
 **Overall Progress:** 28% Complete
 
