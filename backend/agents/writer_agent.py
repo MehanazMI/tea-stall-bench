@@ -8,7 +8,10 @@ It provides a clean interface for content creation with configurable styles and 
 import re
 from typing import Dict, Any, Optional
 from backend.agents.base_agent import BaseAgent
+from typing import Dict, Any, Optional
+from backend.agents.base_agent import BaseAgent
 from backend.utils.llm_client import LLMClient
+from backend.config import CONTENT_TYPES, STYLES, LENGTHS, CHANNELS, CHANNEL_LENGTH_GUIDES
 
 
 class WriterAgent(BaseAgent):
@@ -33,57 +36,6 @@ class WriterAgent(BaseAgent):
         >>> print(result['title'], result['content'])
     """
     
-    # Supported options
-    CONTENT_TYPES = [
-        'post',        # Short-form (social media, WhatsApp)
-        'blog',        # Blog article
-        'tutorial',    # Teaching/how-to
-        'listicle',    # List-based ("10 Tips...")
-        'newsletter',  # Email format
-        'story'        # Narrative content
-    ]
-    
-    # Writing styles (unified style + tone) - ordered by temperature (factual → creative)
-    STYLES = [
-        'technical',       # Precise, factual, detailed (temp: 0.3)
-        'educational',     # Teaching, clear, structured (temp: 0.5)
-        'professional',    # Business-like, polished (temp: 0.6)
-        'friendly',        # Warm, casual, approachable (temp: 0.75)
-        'inspirational',   # Motivating, uplifting (temp: 0.8)
-        'storytelling'     # Narrative, engaging, compelling (temp: 0.9)
-    ]
-    LENGTHS = ['short', 'medium', 'long']
-    CHANNELS = ['instagram', 'whatsapp', 'linkedin', 'email', 'blog']
-    
-    # Channel-specific length guidelines (in words)
-    # Ordered by word count: shortest → longest
-    CHANNEL_LENGTH_GUIDES = {
-        'instagram': {
-            'short': '50-100 words',
-            'medium': '100-150 words',
-            'long': '150-200 words'
-        },
-        'whatsapp': {
-            'short': '100-200 words',
-            'medium': '200-400 words',
-            'long': '400-600 words'
-        },
-        'linkedin': {
-            'short': '150-300 words',
-            'medium': '300-600 words',
-            'long': '600-1000 words'
-        },
-        'email': {
-            'short': '200-400 words',
-            'medium': '400-800 words',
-            'long': '800-1200 words'
-        },
-        'blog': {
-            'short': '300-500 words',
-            'medium': '600-1000 words',
-            'long': '1200-1800 words'
-        }
-    }
     
     def __init__(self, llm_client: LLMClient):
         """
@@ -191,38 +143,33 @@ class WriterAgent(BaseAgent):
             raise ValueError("Topic is required")
         
         # Validate content_type if provided
+        # Validate content_type if provided
         if 'content_type' in input_data:
-            if input_data['content_type'] not in self.CONTENT_TYPES:
+            if input_data['content_type'] not in CONTENT_TYPES:
                 raise ValueError(
-                    f"Invalid content_type. Must be one of: {', '.join(self.CONTENT_TYPES)}"
+                    f"Invalid content_type. Must be one of: {', '.join(CONTENT_TYPES)}"
                 )
         
         # Validate style if provided
+        # Validate style if provided
         if 'style' in input_data:
-            if input_data['style'] not in self.STYLES:
+            if input_data['style'] not in STYLES:
                 raise ValueError(
-                    f"Invalid style. Must be one of: {', '.join(self.STYLES)}"
+                    f"Invalid style. Must be one of: {', '.join(STYLES)}"
                 )
         
         # Validate length if provided
         if 'length' in input_data:
-            if input_data['length'] not in self.LENGTHS:
+            if input_data['length'] not in LENGTHS:
                 raise ValueError(
-                    f"Invalid length. Must be one of: {', '.join(self.LENGTHS)}"
+                    f"Invalid length. Must be one of: {', '.join(LENGTHS)}"
                 )
         
         # Validate channel if provided
         if 'channel' in input_data:
-            if input_data['channel'] not in self.CHANNELS:
+            if input_data['channel'] not in CHANNELS:
                 raise ValueError(
-                    f"Invalid channel. Must be one of: {', '.join(self.CHANNELS)}"
-                )
-        
-        # Validate channel if provided
-        if 'channel' in input_data:
-            if input_data['channel'] not in self.CHANNELS:
-                raise ValueError(
-                    f"Invalid channel. Must be one of: {', '.join(self.CHANNELS)}"
+                    f"Invalid channel. Must be one of: {', '.join(CHANNELS)}"
                 )
     
     def _build_prompt(
@@ -249,7 +196,7 @@ class WriterAgent(BaseAgent):
             str: Formatted prompt for LLM
         """
         # Get channel-specific length guidelines
-        channel_guides = self.CHANNEL_LENGTH_GUIDES.get(channel, self.CHANNEL_LENGTH_GUIDES['blog'])
+        channel_guides = CHANNEL_LENGTH_GUIDES.get(channel, CHANNEL_LENGTH_GUIDES['blog'])
         length_guide = channel_guides[length]
         
         # Build the prompt

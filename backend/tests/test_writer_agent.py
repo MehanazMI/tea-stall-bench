@@ -8,6 +8,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from backend.agents.writer_agent import WriterAgent
 from backend.utils.llm_client import LLMClient
+from backend.config import CONTENT_TYPES
 
 
 class TestWriterAgentInitialization:
@@ -269,7 +270,7 @@ This is a comprehensive tutorial."""
         
         agent = WriterAgent(mock_client)
         
-        for content_type in WriterAgent.CONTENT_TYPES:
+        for content_type in CONTENT_TYPES:
             result = await agent.execute({
                 "topic": "Test",
                 "content_type": content_type
