@@ -18,7 +18,9 @@ from backend.api.v1.models import (
     GenerateAndPublishResponse,
     HealthResponse,
     StylesResponse,
-    ChannelsResponse
+    ChannelsResponse,
+    PipelineRequest,
+    PipelineResponse
 )
 
 logger = logging.getLogger("TeaStallBench.API.Routes")
@@ -162,6 +164,54 @@ async def generate_and_publish(
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         logger.error(f"Pipeline failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Pipeline failed: {str(e)}")
+
+
+@router.post("/pipeline", response_model=PipelineResponse)
+async def run_pipeline(
+    request: PipelineRequest,
+    llm_client: LLMClient = Depends(get_llm_client)
+):
+    """
+    Sprint 2 Pipeline: Research → Outline → Write.
+    
+    Runs the full multi-agent pipeline via the Orchestrator (Director).
+    Returns research data, outline, and final article.
+    """
+    from backend.orchestrator import Orchestrator
+
+    try:
+        logger.info(f"🎬 Pipeline triggered for topic: '{request.topic}'")
+
+        orchestrator = Orchestrator(llm_client)
+        ctx = await orchestrator.run_pipeline(
+            topic=request.topic,
+            content_type=request.content_type or "blog",
+            style=request.style or "professional",
+            length=request.length or "medium",
+            channel=request.channel or "blog"
+        )
+
+        return PipelineResponse(
+            status=ctx.current_stage,
+            trace_id=ctx.trace_id,
+            topic=ctx.topic,
+            research_data=ctx.research_data,
+            research_sources=ctx.research_sources,
+            outline=ctx.outline,
+            article_title=ctx.article_title,
+            article_content=ctx.article_content,
+            word_count=ctx.word_count,
+            errors=ctx.errors,
+            started_at=ctx.started_at,
+            completed_at=ctx.completed_at
+        )
+
+    except ValueError as e:
+        logger.warning(f"Pipeline validation error: {str(e)}")
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        logger.error(f"Pipeline failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {str(e)}")
 
 

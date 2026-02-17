@@ -56,13 +56,10 @@ class TestRootEndpoint:
     """Test root endpoint."""
     
     def test_root(self, client):
-        """Test root endpoint returns API info."""
+        """Test root endpoint serves the dashboard."""
         response = client.get("/")
         assert response.status_code == 200
-        data = response.json()
-        assert data["name"] == "Tea Stall Bench API"
-        assert data["docs"] == "/docs"
-        assert data["health"] == "/api/v1/health"
+        assert "Tea Stall Bench" in response.text
 
 
 class TestStylesEndpoint:

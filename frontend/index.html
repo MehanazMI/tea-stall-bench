@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Stall Bench — AI Content Pipeline</title>
+    <meta name="description" content="Multi-agent AI content generation pipeline dashboard. Research, Outline, and Write — powered by Scout, Draft, and Ink.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- ── Header ──────────────────────────────────────── -->
+    <header id="site-header">
+        <div class="header-content">
+            <div class="brand">
+                <span class="logo">🍵</span>
+                <div>
+                    <h1>Tea Stall Bench</h1>
+                    <p class="tagline">Multi-Agent Content Pipeline</p>
+                </div>
+            </div>
+            <div class="header-status" id="header-status">
+                <span class="dot dot-idle"></span>
+                <span>Ready</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ── Input Panel ─────────────────────────────── -->
+        <section class="input-panel glass" id="input-panel">
+            <h2>🎬 New Pipeline Run</h2>
+            <form id="pipeline-form">
+                <div class="form-group">
+                    <label for="topic">Topic</label>
+                    <input type="text" id="topic" placeholder="e.g., The Future of AI Agents" required minlength="3" autocomplete="off">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="style">Style</label>
+                        <select id="style">
+                            <option value="professional">Professional</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="technical">Technical</option>
+                            <option value="educational">Educational</option>
+                            <option value="storytelling">Storytelling</option>
+                            <option value="inspirational">Inspirational</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="channel">Channel</label>
+                        <select id="channel">
+                            <option value="blog">Blog</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="linkedin">LinkedIn</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="length">Length</label>
+                        <select id="length">
+                            <option value="short">Short</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="run-btn" class="btn-primary">
+                    <span class="btn-text">▶ Run Pipeline</span>
+                    <span class="btn-loading" style="display:none;">
+                        <span class="spinner"></span> Running...
+                    </span>
+                </button>
+            </form>
+        </section>
+
+        <!-- ── Pipeline Stages ──────────────────────────── -->
+        <section class="pipeline-stages" id="pipeline-stages">
+            <h2>📊 Pipeline Stages</h2>
+            <div class="stages-grid">
+                <!-- Stage 1: Scout -->
+                <div class="stage-card glass" id="stage-scout" data-status="pending">
+                    <div class="stage-header">
+                        <span class="stage-icon">🔍</span>
+                        <div>
+                            <h3>Scout</h3>
+                            <span class="stage-role">Researcher</span>
+                        </div>
+                        <span class="stage-badge" id="badge-scout">Pending</span>
+                    </div>
+                    <div class="stage-content" id="content-scout">
+                        <p class="stage-placeholder">Waiting for pipeline to start...</p>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="stage-arrow">→</div>
+
+                <!-- Stage 2: Draft -->
+                <div class="stage-card glass" id="stage-draft" data-status="pending">
+                    <div class="stage-header">
+                        <span class="stage-icon">📝</span>
+                        <div>
+                            <h3>Draft</h3>
+                            <span class="stage-role">Outliner</span>
+                        </div>
+                        <span class="stage-badge" id="badge-draft">Pending</span>
+                    </div>
+                    <div class="stage-content" id="content-draft">
+                        <p class="stage-placeholder">Waiting for Scout...</p>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="stage-arrow">→</div>
+
+                <!-- Stage 3: Ink -->
+                <div class="stage-card glass" id="stage-ink" data-status="pending">
+                    <div class="stage-header">
+                        <span class="stage-icon">✍️</span>
+                        <div>
+                            <h3>Ink</h3>
+                            <span class="stage-role">Writer</span>
+                        </div>
+                        <span class="stage-badge" id="badge-ink">Pending</span>
+                    </div>
+                    <div class="stage-content" id="content-ink">
+                        <p class="stage-placeholder">Waiting for Draft...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Error Banner ─────────────────────────────── -->
+        <div class="error-banner glass" id="error-banner" style="display:none;">
+            <span class="error-icon">⚠️</span>
+            <div id="error-messages"></div>
+        </div>
+
+        <!-- ── Output Panel ─────────────────────────────── -->
+        <section class="output-panel glass" id="output-panel" style="display:none;">
+            <div class="output-header">
+                <h2>📄 Generated Article</h2>
+                <div class="output-meta">
+                    <span id="output-trace" class="meta-tag"></span>
+                    <span id="output-words" class="meta-tag"></span>
+                    <span id="output-time" class="meta-tag"></span>
+                </div>
+            </div>
+            <h3 id="article-title" class="article-title"></h3>
+            <div id="article-content" class="article-content"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Tea Stall Bench v2.0 — Sprint 2: Multi-Agent Pipeline 🍵</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

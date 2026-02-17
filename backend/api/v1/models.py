@@ -118,3 +118,40 @@ class ErrorResponse(BaseModel):
     status: str = "error"
     detail: str
     error_type: Optional[str] = None
+
+
+class PipelineRequest(BaseModel):
+    """Request model for full Sprint 2 pipeline (Research → Outline → Write)."""
+    topic: str = Field(..., min_length=3, description="Topic to create content about")
+    content_type: Optional[str] = Field("blog", description="Content type (blog, post, tutorial)")
+    style: Optional[str] = Field("professional", description="Writing style")
+    length: Optional[str] = Field("medium", description="Desired length (short, medium, long)")
+    channel: Optional[str] = Field("blog", description="Publishing channel")
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "topic": "The future of multi-agent AI systems",
+                "content_type": "blog",
+                "style": "professional",
+                "length": "medium",
+                "channel": "blog"
+            }
+        }
+    )
+
+
+class PipelineResponse(BaseModel):
+    """Response model for pipeline execution."""
+    status: str
+    trace_id: str
+    topic: str
+    research_data: Optional[str] = None
+    research_sources: Optional[List[str]] = None
+    outline: Optional[Dict[str, Any]] = None
+    article_title: Optional[str] = None
+    article_content: Optional[str] = None
+    word_count: Optional[int] = None
+    errors: List[str] = []
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
