@@ -100,13 +100,52 @@ class ParallelProvider(SearchProvider):
             logger.error(f"Parallel search failed: {e}")
             return f"Search exception: {e}"
 
-def get_search_provider() -> SearchProvider:
-    """Factory to get the configured search provider."""
-    parallel_key = os.getenv("PARALLEL_API_KEY")
-    # Check if key is valid (not the example placeholder)
-    if parallel_key and parallel_key != "your_parallel_api_key_here":
-        logger.info("Using Parallel.AI Search Provider")
-        return ParallelProvider(parallel_key)
+class HybridSearchProvider(SearchProvider):
+    """
+    Hybrid provider that tries Parallel.AI first, then falls back to DuckDuckGo.
+    Implements the Circuit Breaker pattern (conceptually) via fallback.
+    """
     
-    logger.info("Using DuckDuckGo Search Provider")
-    return DuckDuckGoProvider()
+    def __init__(self, primary: SearchProvider, fallback: SearchProvider):
+        self.primary = primary
+        self.fallback = fallback
+        
+    def search(self, query: str) -> str:
+        """
+        Execute search with fallback logic.
+        
+        Args:
+            query: Search query string
+            
+        Returns:
+            str: Search results from primary or fallback provider
+        """
+        try:
+            logger.info(f"Attempting search with primary provider: {type(self.primary).__name__}")
+            return self.primary.search(query)
+        except Exception as e:
+            logger.warning(f"Primary search provider failed: {str(e)}")
+            logger.info(f"Falling back to: {type(self.fallback).__name__}")
+            try:
+                return self.fallback.search(query)
+            except Exception as fallback_error:
+                logger.error(f"Fallback search provider also failed: {str(fallback_error)}")
+                raise fallback_error
+
+
+def get_search_provider() -> SearchProvider:
+    """
+    Factory function to get the appropriate search provider.
+    Returns a HybridSearchProvider if Parallel key is present,
+    otherwise returns DuckDuckGoProvider.
+    """
+    ddg_provider = DuckDuckGoProvider()
+    
+    parallel_key = os.getenv("PARALLEL_API_KEY")
+    if parallel_key and parallel_key != "your_parallel_api_key_here":
+        logger.info("Configuring Hybrid Search (Parallel Primary -> DDG Fallback)")
+        parallel_provider = ParallelProvider(parallel_key)
+        return HybridSearchProvider(primary=parallel_provider, fallback=ddg_provider)
+
+    logger.info("Configuring Single Search Provider (DuckDuckGo)")
+    return ddg_provider
