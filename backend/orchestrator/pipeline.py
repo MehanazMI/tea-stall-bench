@@ -170,12 +170,10 @@ class Orchestrator:
         ctx.current_stage = "writing"
         self.logger.info(f"[{ctx.trace_id}] ✍️ Stage 3: Ink writing article...")
 
-        import json as json_mod
+        # Build additional context from research (outline passed separately)
         additional_context = ""
         if ctx.research_data:
             additional_context += f"Research Summary:\n{ctx.research_data[:2000]}\n\n"
-        if ctx.outline:
-            additional_context += f"Content Outline:\n{json_mod.dumps(ctx.outline, indent=2)}\n"
 
         try:
             result = await self.ink.execute({
@@ -184,12 +182,22 @@ class Orchestrator:
                 "style": ctx.style,
                 "length": ctx.length,
                 "channel": ctx.channel,
-                "additional_context": additional_context
+                "additional_context": additional_context,
+                "outline": ctx.outline  # Pass outline directly for structured injection
             })
             ctx.article_title = result.get("title", ctx.topic)
             ctx.article_content = result.get("content", "")
             ctx.word_count = result.get("word_count", 0)
-            self.logger.info(f"[{ctx.trace_id}] ✍️ Article complete. Title: '{ctx.article_title}'")
+
+            # Log compliance if available
+            compliance = result.get("compliance")
+            if compliance:
+                self.logger.info(
+                    f"[{ctx.trace_id}] 📊 Compliance: {compliance['score']:.0%} "
+                    f"({len(compliance['covered'])}/{len(compliance['covered']) + len(compliance['missing'])} sections)"
+                )
+            else:
+                self.logger.info(f"[{ctx.trace_id}] ✍️ Article complete. Title: '{ctx.article_title}'")
         except Exception as e:
             error_msg = f"Writing failed: {str(e)}"
             ctx.errors.append(error_msg)
