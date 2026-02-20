@@ -6,9 +6,9 @@ It provides a clean interface for content creation with configurable styles and 
 """ 
 
 import re
-from typing import Dict, Any, Optional
-from backend.agents.base_agent import BaseAgent
-from typing import Dict, Any, Optional
+import json
+import logging
+from typing import Dict, Any, Optional, List
 from backend.agents.base_agent import BaseAgent
 from backend.utils.llm_client import LLMClient
 from backend.config import CONTENT_TYPES, STYLES, LENGTHS, CHANNELS, CHANNEL_LENGTH_GUIDES
@@ -64,6 +64,7 @@ class WriterAgent(BaseAgent):
                 - length (str): Content length (default: 'short')
                 - channel (str): Publishing channel (default: 'whatsapp')
                 - additional_context (str): Extra context (optional)
+                - outline (dict): Structured outline from Draft agent (optional)
         
         Returns:
             Dict[str, Any]: Generated content with:
@@ -71,6 +72,7 @@ class WriterAgent(BaseAgent):
                 - content (str): Full content body
                 - word_count (int): Approximate word count
                 - metadata (dict): Content metadata
+                - compliance (dict): Outline compliance score (if outline provided)
         
         Raises:
             ValueError: If required parameters are missing
@@ -85,18 +87,23 @@ class WriterAgent(BaseAgent):
         length = input_data.get('length', 'short')
         channel = input_data.get('channel', 'whatsapp')
         additional_context = input_data.get('additional_context', '')
+        outline = input_data.get('outline', None)
         
-        # Build prompt
+        # Build prompt (outline-aware if outline provided)
         prompt = self._build_prompt(
             topic=topic,
             content_type=content_type,
             style=style,
             length=length,
             channel=channel,
-            additional_context=additional_context
+            additional_context=additional_context,
+            outline=outline
         )
         
         self.logger.info(f"Generating {content_type} about '{topic}' with {style} style")
+        if outline:
+            section_count = len(outline.get('sections', []))
+            self.logger.info(f"Outline-aware mode: {section_count} sections to follow")
         
         # Determine temperature based on style
         temperature = self._get_temperature_for_style(style)
@@ -113,7 +120,7 @@ class WriterAgent(BaseAgent):
         # Calculate word count using regex for accuracy
         word_count = len(re.findall(r'\b\w+\b', content))
         
-        return {
+        result = {
             'title': title,
             'content': content,
             'word_count': word_count,
@@ -125,6 +132,17 @@ class WriterAgent(BaseAgent):
                 'channel': channel
             }
         }
+        
+        # Run compliance check if outline was provided
+        if outline:
+            compliance = self._check_compliance(content, outline)
+            result['compliance'] = compliance
+            self.logger.info(
+                f"Compliance: {compliance['score']:.0%} "
+                f"({len(compliance['covered'])}/{len(compliance['covered']) + len(compliance['missing'])} sections)"
+            )
+        
+        return result
     
     def _validate_input(self, input_data: Dict[str, Any]) -> None:
         """
@@ -179,10 +197,15 @@ class WriterAgent(BaseAgent):
         style: str,
         length: str,
         channel: str,
-        additional_context: str
+        additional_context: str,
+        outline: Optional[Dict[str, Any]] = None
     ) -> str:
         """
         Build a prompt for the LLM based on parameters.
+        
+        When an outline is provided, each section heading and its key points
+        are injected as explicit numbered instructions so the LLM follows
+        the structure strictly.
         
         Args:
             topic: Topic to write about
@@ -191,6 +214,7 @@ class WriterAgent(BaseAgent):
             length: Desired length
             channel: Publishing channel
             additional_context: Additional context
+            outline: Structured outline from Draft agent (optional)
             
         Returns:
             str: Formatted prompt for LLM
@@ -212,6 +236,18 @@ Note: Optimize content for {channel} platform with a {style} style.
 
 """
         
+        # ── Outline-aware structure injection ──────────────────
+        if outline and outline.get('sections'):
+            prompt += "IMPORTANT: You MUST follow this exact structure.\n"
+            prompt += "Write one section for each heading below, using the heading as a subheading in the article.\n\n"
+            for i, section in enumerate(outline['sections'], 1):
+                heading = section.get('heading', f'Section {i}')
+                key_points = section.get('key_points', [])
+                prompt += f"Section {i}: {heading}\n"
+                if key_points:
+                    prompt += f"  Cover these points: {'; '.join(key_points)}\n"
+            prompt += "\n"
+        
         if additional_context:
             prompt += f"Additional context: {additional_context}\n\n"
         
@@ -225,6 +261,56 @@ Note: Optimize content for {channel} platform with a {style} style.
 Begin with the title on the first line, then the content."""
         
         return prompt
+
+    def _check_compliance(
+        self,
+        content: str,
+        outline: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Check if the generated content covers all outline sections.
+        
+        Performs case-insensitive matching of outline section headings
+        against the article content.
+        
+        Args:
+            content: The generated article content
+            outline: The outline used to guide writing
+            
+        Returns:
+            dict with: score (float 0-1), covered (list), missing (list)
+        """
+        sections = outline.get('sections', [])
+        if not sections:
+            return {'score': 1.0, 'covered': [], 'missing': []}
+        
+        content_lower = content.lower()
+        covered = []
+        missing = []
+        
+        for section in sections:
+            heading = section.get('heading', '')
+            if not heading:
+                continue
+            # Check if heading appears in content (case-insensitive)
+            if heading.lower() in content_lower:
+                covered.append(heading)
+            else:
+                # Also check partial matches (first significant word)
+                words = [w for w in heading.split() if len(w) > 3]
+                if any(w.lower() in content_lower for w in words):
+                    covered.append(heading)
+                else:
+                    missing.append(heading)
+        
+        total = len(covered) + len(missing)
+        score = len(covered) / total if total > 0 else 1.0
+        
+        return {
+            'score': score,
+            'covered': covered,
+            'missing': missing
+        }
     
     def _get_temperature_for_style(self, style: str) -> float:
         """
