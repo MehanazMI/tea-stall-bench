@@ -2,14 +2,17 @@
 FastAPI Main Application for Tea Stall Bench
 
 REST API exposing Writer and Publisher agents.
+Serves the frontend dashboard at root.
 """
 
 import logging
+from pathlib import Path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 # Configure logging
 logging.basicConfig(
@@ -17,6 +20,9 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("TeaStallBench.API")
+
+# Frontend directory
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
 
 @asynccontextmanager
@@ -26,6 +32,7 @@ async def lifespan(app: FastAPI):
     """
     logger.info("Starting Tea Stall Bench API...")
     logger.info("Agents will be initialized per-request via dependency injection")
+    logger.info(f"Frontend directory: {FRONTEND_DIR}")
     
     yield
     
@@ -36,7 +43,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Tea Stall Bench API",
     description="REST API for automated content generation and WhatsApp publishing",
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan
 )
 
@@ -55,16 +62,18 @@ from backend.api.v1 import routes
 
 app.include_router(routes.router, prefix="/api/v1", tags=["v1"])
 
+# Mount static files (CSS, JS)
+if FRONTEND_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
-@app.get("/")
+
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    """Root endpoint - API information."""
-    return {
-        "name": "Tea Stall Bench API",
-        "version": "1.0.0",
-        "docs": "/docs",
-        "health": "/api/v1/health"
-    }
+    """Serve the frontend dashboard."""
+    index_file = FRONTEND_DIR / "index.html"
+    if index_file.exists():
+        return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>Tea Stall Bench API</h1><p>Frontend not found. Visit <a href='/docs'>/docs</a> for API.</p>")
 
 
 @app.exception_handler(Exception)

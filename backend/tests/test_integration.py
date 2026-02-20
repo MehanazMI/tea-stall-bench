@@ -225,10 +225,10 @@ class TestAllEndpointsExist:
         assert response.json()["channels"][0]["name"] == "whatsapp"
     
     def test_root_responds(self, client):
-        """Root endpoint should show API info."""
+        """Root endpoint should serve the dashboard."""
         response = client.get("/")
         assert response.status_code == 200
-        assert response.json()["name"] == "Tea Stall Bench API"
+        assert "Tea Stall Bench" in response.text
     
     def test_docs_available(self, client):
         """Swagger docs should be available."""
