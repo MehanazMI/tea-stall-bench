@@ -2,6 +2,8 @@
 
 This document explains how to set up and maintain GitHub sync for the Tea Stall Bench project.
 
+> This guide covers both **basic Git setup** (for newcomers) and the **team workflow** that this project actually uses (Conventional Commits, GitHub CLI, sprint branches, PR process).
+
 ---
 
 ## 🎯 Initial Setup (One-Time)
@@ -86,6 +88,66 @@ git push
 git add backend/agents/new_agent.py
 git commit -m "Added sentiment analysis agent"
 git push
+```
+
+---
+
+## 🖥️ GitHub CLI (gh) — Project Standard
+
+### `git` vs `gh` — What's the difference?
+
+| | `git` | `gh` |
+|---|---|---|
+| **What it is** | Core version control tool | GitHub's official CLI tool |
+| **What it does** | Commits, branches, merges, diffs | Issues, PRs, labels, releases |
+| **Talks to** | Local repo + remote via Git protocol | GitHub API (requires auth) |
+| **Example** | `git commit`, `git push`, `git pull` | `gh pr create`, `gh issue close` |
+| **Install** | Comes with Git | Separate install required |
+
+> **Rule of thumb:** Use `git` to manage your **code changes**. Use `gh` to manage your **GitHub project** (issues, PRs, labels).
+
+This project uses **both**. `gh` is required for the team workflow (creating issues, opening/merging PRs, applying sprint labels).
+
+### Install
+
+```powershell
+# Windows (via winget)
+winget install --id GitHub.cli
+
+# Verify
+gh --version
+```
+
+### Authenticate
+
+```bash
+gh auth login
+# Choose: GitHub.com → HTTPS → Login with a web browser
+```
+
+### Common gh Commands
+
+```bash
+# Create an issue
+gh issue create --title "Task 15: SSE Streaming" --body "Description..." --label "sprint-3,enhancement"
+
+# Close an issue with a comment
+gh issue close 15 --comment "Completed in PR #20"
+
+# Create a pull request
+gh pr create --title "feat: SSE streaming (Task 15)" --body "Description..."
+
+# Merge (squash) a pull request
+gh pr merge 20 --squash
+
+# List open issues
+gh issue list
+
+# List open PRs
+gh pr list
+
+# Create a label
+gh label create sprint-3 --description "Sprint 3 tasks" --color 0e8a16
 ```
 
 ---
@@ -226,6 +288,9 @@ Use this checklist to verify your setup:
 - [ ] Can see files on github.com/YOUR-USERNAME/tea-stall-bench
 - [ ] README looks good with rendered diagrams
 - [ ] Authentication working (token or SSH)
+- [ ] **GitHub CLI installed** (`gh --version`)
+- [ ] **GitHub CLI authenticated** (`gh auth status`)
+- [ ] **Sprint labels created** (`sprint-1`, `sprint-2`, `sprint-3`)
 
 ---
 
@@ -264,49 +329,198 @@ git ls-files --others | xargs du -h | sort -hr | head -20
 git reset HEAD large-file.db
 ```
 
+### Problem: Merge conflict after squash-merge from GitHub
+**Context:** When you `gh pr merge --squash`, GitHub rewrites the commits. If local `main` has different commits, pulling creates a conflict.
+
+**Solution:**
+```bash
+# Option A: Accept the remote (squashed) version of the conflicted file
+git checkout --theirs <conflicted-file>
+git add <conflicted-file>
+git commit -m "merge: resolve conflict with squashed PR #N"
+git push origin main
+
+# Option B: Abort and force-sync local to remote
+git merge --abort
+git reset --hard origin/main
+```
+
+> ⚠️ **Why this happens:** Squash merge creates a brand-new commit SHA on `main` that doesn't match the commits on your local feature branch. Always `git pull origin main` immediately after a squash merge.
+
+### Problem: `gh` command not found on Windows
+**Solution:**
+```powershell
+# Install via winget
+winget install --id GitHub.cli
+
+# Or via scoop
+scoop install gh
+
+# Restart your terminal after installing!
+```
+
 ---
 
 ## 📊 Best Practices
 
-### Commit Messages
+### Conventional Commits — Project Standard
+
+This project uses **Conventional Commits** format. Every commit message must follow this structure:
+
+```
+<type>(<scope>): <description>
+```
+
+| Type | When to use | Example |
+|------|-------------|---------|
+| `feat` | New feature | `feat(writer): add outline-aware prompt injection` |
+| `fix` | Bug fix | `fix(api): handle empty topic gracefully` |
+| `test` | Adding tests | `test(writer): add compliance check tests` |
+| `docs` | Documentation | `docs: update sprint 2 plan as completed` |
+| `refactor` | Code reorganization | `refactor(config): centralize channel constants` |
+| `chore` | Build/tooling | `chore: update requirements.txt` |
+| `merge` | Merge commits | `merge: resolve conflict with squashed PR #14` |
 
 ✅ **Good:**
-- `"Added Research Agent with DuckDuckGo integration"`
-- `"Fixed WhatsApp authentication timeout issue"`
-- `"Updated README with installation instructions"`
+```
+feat(writer): outline-aware prompt injection and compliance check (Task 13)
+fix(research): fallback to DuckDuckGo when Parallel.AI times out
+docs: mark Sprint 2 as 100% complete (7/7 tasks)
+```
 
 ❌ **Bad:**
-- `"Update"`
-- `"Fixed bugs"`
-- `"Changes"`
+```
+Update
+Fixed bugs
+Changes
+```
+
+---
+
+### Branch Naming Convention
+
+All branches follow this naming pattern:
+
+```
+<type>/task-<number>-<short-description>
+```
+
+| Type | Pattern | Example |
+|------|---------|--------|
+| New feature | `feat/task-N-description` | `feat/task-15-sse-streaming` |
+| Refactor | `refactor/task-N-description` | `refactor/task-9-config` |
+| Bug fix | `fix/task-N-description` | `fix/task-10-research-timeout` |
+| Documentation | `docs/description` | `docs/sprint3-plan` |
+
+```bash
+# Create a task branch
+git checkout -b feat/task-15-sse-streaming
+
+# Push and set upstream
+git push -u origin feat/task-15-sse-streaming
+```
+
+---
+
+### Sprint Label System
+
+Every issue and PR must be labeled with its sprint:
+
+| Label | Description | Colour |
+|-------|-------------|--------|
+| `sprint-1` | Sprint 1 tasks | grey |
+| `sprint-2` | Sprint 2 tasks | green |
+| `sprint-3` | Sprint 3 tasks | green |
+| `enhancement` | Feature additions | blue |
+| `bug` | Bug reports | red |
+| `frontend` | UI work | lime |
+
+```bash
+# Create missing sprint labels
+gh label create sprint-3 --description "Sprint 3 tasks" --color 0e8a16
+gh label create sprint-4 --description "Sprint 4 tasks" --color 0e8a16
+```
+
+---
+
+### Full PR Workflow (Team Standard)
+
+```bash
+# 1. Create branch for your task
+git checkout -b feat/task-15-sse-streaming
+
+# 2. Make changes, commit with Conventional Commits
+git add backend/api/v1/stream.py
+git commit -m "feat(api): add SSE streaming endpoint (Task 15)"
+
+# 3. Push branch
+git push -u origin feat/task-15-sse-streaming
+
+# 4. Create PR with gh CLI
+gh pr create \
+  --title "feat: SSE pipeline streaming (Task 15)" \
+  --body "## Task 15 Changes
+- Added /api/v1/pipeline/stream endpoint
+- Yields stage events via Server-Sent Events
+- Tests: 5 new tests passing" \
+  --label "sprint-3,enhancement"
+
+# 5. After review: squash merge
+gh pr merge <PR-number> --squash
+
+# 6. Close linked issue
+gh issue close <issue-number> --comment "Completed in PR #<PR-number>"
+
+# 7. Sync local main
+git checkout main
+git pull origin main
+```
 
 ### When to Commit
 
-- ✅ After completing a feature
+- ✅ After completing a feature or checkpoint
 - ✅ After fixing a bug
 - ✅ Before switching tasks
-- ✅ At the end of each day
+- ✅ At the end of each work session
 - ✅ Before testing something risky
 
-### Branching (Advanced)
+---
 
-For team projects, use branches:
+## 🌐 Windows / PowerShell Tips
 
+This project is developed on Windows. Here are gotchas specific to this environment:
+
+### Use `cd` with quotes for paths with spaces
+```powershell
+cd 'c:\Silambu\tea-stall-bench'
+```
+
+### Pipeline output in PowerShell
+```powershell
+# Pipe stderr to stdout (needed for pytest output capture)
+python -m pytest backend/tests/ -v 2>&1 | Select-Object -Last 30
+```
+
+### Line endings (CRLF vs LF)
+Git may warn about CRLF. Configure once:
 ```bash
-# Create feature branch
-git checkout -b feature/seo-agent
+git config --global core.autocrlf true
+```
 
-# Work on feature, commit changes
-git add .
-git commit -m "Added SEO agent"
+### Run the API server
+```powershell
+# From project root:
+python -m backend.main
 
-# Push branch to GitHub
-git push origin feature/seo-agent
+# Or using uvicorn directly:
+uvicorn backend.main:app --reload
+```
 
-# Create Pull Request on GitHub
-# After review and merge, switch back to main
-git checkout main
-git pull origin main
+### Activate virtual environment
+```powershell
+.\venv\Scripts\Activate.ps1
+# If blocked:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 ---
@@ -316,6 +530,8 @@ git pull origin main
 - **Git Basics:** https://git-scm.com/book/en/v2
 - **GitHub Docs:** https://docs.github.com/en
 - **Interactive Tutorial:** https://learngitbranching.js.org/
+- **GitHub CLI:** https://cli.github.com/manual/
+- **Conventional Commits:** https://www.conventionalcommits.org/en/v1.0.0/
 
 ---
 
