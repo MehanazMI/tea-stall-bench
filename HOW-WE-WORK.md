@@ -133,4 +133,25 @@ On our [Pull Requests page](https://github.com/MehanazMI/tea-stall-bench/pulls?q
 
 ---
 
+## ✏️ Tips for Editing Documents
+
+If you ever update a document like `PROGRESS.md` yourself, here's how to add the icons and symbols:
+
+**On Windows** — press **`Win + .`** (Windows key + period) to open the emoji picker. Search by name, e.g. type "tea" to find 🍵.
+
+**Quick reference — icons used in this project:**
+
+| Emoji | Meaning in docs |
+|-------|----------------|
+| 🍵 | One completed sprint task (progress bar) |
+| ✅ | Task done |
+| 🔄 | Task in progress |
+| ⬜ | Task not started |
+| ⚠️ | Warning or blocker |
+| 🎉 | Sprint milestone celebration |
+
+You can also search for any emoji by name at [emojipedia.org](https://emojipedia.org) — click one to copy it, then paste directly into the document.
+
+---
+
 *Last updated: 2026-02-22*
