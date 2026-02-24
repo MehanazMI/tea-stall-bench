@@ -232,12 +232,37 @@ async def get_styles():
 @router.get("/channels", response_model=ChannelsResponse)
 async def get_channels():
     """Get supported publishing channels."""
+    from backend.config import CHANNEL_LENGTH_GUIDES
     channels = [
+        {
+            "name": "blog",
+            "description": "Long-form blog article",
+            "requires_phone": False,
+            "max_length": 10000
+        },
         {
             "name": "whatsapp",
             "description": "WhatsApp messaging",
             "requires_phone": True,
             "max_length": 4000
+        },
+        {
+            "name": "linkedin",
+            "description": "LinkedIn post",
+            "requires_phone": False,
+            "max_length": 3000
+        },
+        {
+            "name": "instagram",
+            "description": "Instagram caption",
+            "requires_phone": False,
+            "max_length": 2200
+        },
+        {
+            "name": "email",
+            "description": "Email newsletter",
+            "requires_phone": False,
+            "max_length": 5000
         }
     ]
     return ChannelsResponse(channels=channels)
@@ -249,5 +274,5 @@ async def health_check():
     return HealthResponse(
         status="healthy",
         service="Tea Stall Bench API",
-        version="1.0.0"
+        version="2.0.0"
     )

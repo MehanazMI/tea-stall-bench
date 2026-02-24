@@ -7,6 +7,7 @@ Persona: 'Director' / 'Iyakkunar' (Tamil: Director)
 
 import logging
 import uuid
+import asyncio
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -101,14 +102,23 @@ class Orchestrator:
 
         self.logger.info(f"[{ctx.trace_id}] 🎬 Pipeline started for topic: '{topic}'")
 
-        # ── Stage 1: Research (Scout) ──────────────────────────────
-        ctx = await self._stage_research(ctx)
+        try:
+            async with asyncio.timeout(300):  # 5-minute hard limit
+                # ── Stage 1: Research (Scout) ──────────────────────────────
+                ctx = await self._stage_research(ctx)
 
-        # ── Stage 2: Outline (Draft) ──────────────────────────────
-        ctx = await self._stage_outline(ctx)
+                # ── Stage 2: Outline (Draft) ──────────────────────────────
+                ctx = await self._stage_outline(ctx)
 
-        # ── Stage 3: Write (Ink) ──────────────────────────────────
-        ctx = await self._stage_write(ctx)
+                # ── Stage 3: Write (Ink) ──────────────────────────────────
+                ctx = await self._stage_write(ctx)
+
+        except TimeoutError:
+            error_msg = "Pipeline timed out after 5 minutes"
+            ctx.errors.append(error_msg)
+            ctx.current_stage = "timeout"
+            self.logger.error(f"[{ctx.trace_id}] ⏰ {error_msg}")
+            raise
 
         # ── Done ──────────────────────────────────────────────────
         ctx.current_stage = "completed"

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tea Stall Bench — AI Content Pipeline</title>
-    <meta name="description" content="Multi-agent AI content generation pipeline dashboard. Research, Outline, and Write — powered by Scout, Draft, and Ink.">
+    <meta name="description"
+        content="Multi-agent AI content generation pipeline dashboard. Research, Outline, and Write — powered by Scout, Draft, and Ink.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <!-- ── Header ──────────────────────────────────────── -->
     <header id="site-header">
@@ -35,7 +39,8 @@
             <form id="pipeline-form">
                 <div class="form-group">
                     <label for="topic">Topic</label>
-                    <input type="text" id="topic" placeholder="e.g., The Future of AI Agents" required minlength="3" autocomplete="off">
+                    <input type="text" id="topic" placeholder="e.g., The Future of AI Agents" required minlength="3"
+                        autocomplete="off">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -54,8 +59,9 @@
                         <select id="channel">
                             <option value="blog">Blog</option>
                             <option value="whatsapp">WhatsApp</option>
-                            <option value="twitter">Twitter</option>
                             <option value="linkedin">LinkedIn</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="email">Email</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -160,4 +166,5 @@
 
     <script src="/static/app.js"></script>
 </body>
+
 </html>

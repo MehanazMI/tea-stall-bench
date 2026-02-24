@@ -49,7 +49,7 @@ class TestHealthEndpoint:
         data = response.json()
         assert data["status"] == "healthy"
         assert data["service"] == "Tea Stall Bench API"
-        assert data["version"] == "1.0.0"
+        assert data["version"] == "2.0.0"
 
 
 class TestRootEndpoint:
@@ -94,9 +94,13 @@ class TestChannelsEndpoint:
         assert "channels" in data
         assert len(data["channels"]) >= 1
         
-        # Check WhatsApp channel
-        whatsapp = data["channels"][0]
-        assert whatsapp["name"] == "whatsapp"
+        # Check WhatsApp channel exists and has correct properties
+        channel_names = [ch["name"] for ch in data["channels"]]
+        assert "whatsapp" in channel_names
+        assert "blog" in channel_names
+        assert len(data["channels"]) >= 3
+
+        whatsapp = next(ch for ch in data["channels"] if ch["name"] == "whatsapp")
         assert whatsapp["requires_phone"] is True
         assert whatsapp["max_length"] == 4000
 

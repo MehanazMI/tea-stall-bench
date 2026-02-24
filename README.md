@@ -52,14 +52,14 @@ An AI multi-agent orchestration system that automates content creation and publi
 
 **Quick Version:** Topic → Research → Outline → Write → Edit → Publish → WhatsApp
 
-| Agent | What They Do | Built In |
-|-------|-------------|----------|
-| **Writer** | Generates draft content | Sprint 1 (Week 1-2) |
-| **Research** | Finds web information | Sprint 2 (Week 3-4) |
-| **Outline** | Creates content structure | Sprint 2 (Week 3-4) |
-| **Editor** | Improves quality | Sprint 3 (Week 5-6) |
-| **Publisher** | Posts to WhatsApp | Sprint 4 (Week 7-8) |
-| **Orchestrator** | Coordinates everything | Sprint 3 (Week 5-6) |
+| Agent | Persona | What They Do | Built In |
+|-------|---------|-------------|----------|
+| **Writer** | Ink ✍️ | Generates draft content | Sprint 1 ✅ |
+| **Publisher** | Relay 📱 | Sends content to WhatsApp | Sprint 1 ✅ |
+| **Research** | Scout 🔍 | Finds web information | Sprint 2 ✅ |
+| **Outline** | Draft 📝 | Creates content structure | Sprint 2 ✅ |
+| **Orchestrator** | Director 🎬 | Coordinates all agents | Sprint 2 ✅ |
+| **Email/Telegram** | Relay 📱 | Multi-channel publishing | Sprint 4 🔜 |
 
 ---
 
@@ -74,18 +74,17 @@ An AI multi-agent orchestration system that automates content creation and publi
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR-USERNAME/tea-stall-bench.git
+git clone https://github.com/MehanazMI/tea-stall-bench.git
 cd tea-stall-bench
 
 # Install dependencies
-pip install fastapi ollama selenium
+pip install -r backend/requirements.txt
 
 # Get an LLM model
 ollama pull llama3
 
 # Run the app
-cd backend
-python main.py
+python -m backend.main
 ```
 
 Open `http://localhost:8000` in your browser and start brewing stories! ☕
@@ -121,14 +120,14 @@ Open `http://localhost:8000` in your browser and start brewing stories! ☕
 
 ## 📅 8-Week Build Timeline
 
-| Sprint | Weeks | What You Build | Agents |
+| Sprint | Weeks | What You Build | Status |
 |--------|-------|----------------|--------|
-| **1** | 1-2 | Basic Writer | 1 |
-| **2** | 3-4 | Multi-Agent Pipeline | 4 |
-| **3** | 5-6 | Quality & Orchestration | 5 |
-| **4** | 7-8 | WhatsApp Publishing | 6 |
+| **1** | 1-2 | Writer + Publisher + API | ✅ Done |
+| **2** | 3-4 | Research → Outline → Write pipeline | ✅ Done |
+| **3** | 5-6 | Real-time streaming + Content history | 🔜 Mar 3 |
+| **4** | 7-8 | Multi-channel publishing + Analytics | 🔜 Mar 17 |
 
-**Total:** 6 agents, 8 weeks, 17 team meetings
+**Total:** 5 agents built, 8 weeks, team of 4+
 
 ---
 
@@ -184,9 +183,11 @@ After the core system works, consider:
 Contributions welcome! This project is perfect for learning AI systems.
 
 1. Fork the repo
-2. Create a feature branch
-3. Make your improvements
-4. Submit a pull request
+2. Create a branch: `git checkout -b feat/task-N-description`
+3. Commit using [Conventional Commits](https://www.conventionalcommits.org/): `feat(scope): description`
+4. Push and open a Pull Request via `gh pr create`
+
+See [GITHUB-SETUP.md](GITHUB-SETUP.md) for the full team workflow.
 
 ---
 
