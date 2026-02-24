@@ -56,6 +56,73 @@
 
 ---
 
+## 🚨 Mandatory Workflow Protocol
+
+> **Every single task — no exceptions.** Bug fix, docs change, feature, or cleanup. If it touches a file, this process applies.
+
+### The 6-Step Rule
+
+```
+Step 1: CREATE ISSUE
+  gh issue create --title "<type>: <Task N> - <description>" \
+                  --body "<what, why, checkpoints>" \
+                  --label "sprint-N,<type>"
+
+Step 2: CREATE BRANCH
+  git checkout -b <type>/task-<N>-<short-description>
+  # e.g. fix/task-15-sse-timeout
+  # e.g. feat/task-16-content-history
+
+Step 3: IMPLEMENT + TEST
+  # Write code
+  # Run tests: python -m pytest ... -v
+  # All tests must pass before proceeding
+
+Step 4: COMMIT (Conventional Commits standard)
+  git add <files>
+  git commit -m "<type>(scope): <description> (closes #<issue>)"
+  git push origin <branch-name>
+
+Step 5: OPEN PR
+  gh pr create --title "<type>: <description> (Task N)" \
+               --body "Closes #<issue-number>\n\n<summary>"
+
+Step 6: SQUASH MERGE + CLOSE
+  gh pr merge <PR-number> --squash
+  # Issue auto-closes via 'Closes #N' in PR body
+```
+
+### ❌ What Is NOT Allowed
+- Committing directly to `main`
+- Grouping multiple tasks into one issue or one PR
+- Skipping tests before committing
+- Creating a PR without a linked issue
+- Pushing code without a passing test run
+
+### ✅ Commit Message Format (Conventional Commits)
+
+| Prefix | When to use |
+|--------|-------------|
+| `feat` | New feature or agent |
+| `fix` | Bug fix |
+| `test` | Adding/updating tests |
+| `docs` | Documentation changes |
+| `refactor` | Code restructure, no behaviour change |
+| `chore` | Config, build, tooling |
+
+### Branch Naming
+```
+<type>/task-<N>-<short-description>
+feat/task-15-sse-streaming
+fix/task-cr1-twitter-channel
+docs/task-16-sprint3-plan
+```
+
+### Sprint Labels
+Every issue and PR must have a sprint label: `sprint-1`, `sprint-2`, `sprint-3`, `sprint-4`
+
+---
+
 ## 👥 Team Structure
 
 ### **Your AI Team Members:**
