@@ -287,6 +287,40 @@ These are real mistakes made during the project. Learn from them.
 
 ---
 
+## 🎓 Key Principles for AI Agents
+
+### 1. Understand Before Building
+- Read ALL documentation first (this charter, README, PROGRESS, GITHUB-SETUP)
+- Ask clarifying questions if anything is unclear
+- Don't assume — verify against the codebase
+
+### 2. Build Incrementally
+- Work through checkpoints one at a time
+- Don't build everything at once
+- Stop and validate at each checkpoint before moving forward
+
+### 3. Test Immediately
+- Run tests after **every** checkpoint — not just at the end
+- `python -m pytest backend/tests/ -v` must be green before committing
+- Fix failures before moving to the next checkpoint
+
+### 4. Document Everything
+- Docstrings on every class and method
+- Inline comments for complex logic
+- Update `PROGRESS.md` and the relevant sprint doc after every merged PR
+
+### 5. Commit with Purpose
+- One task = one branch = one PR
+- Commit after each passing checkpoint, not at the end of the whole task
+- Use Conventional Commits format — always
+
+### 6. Ask for Help
+- If stuck for more than 10 minutes, raise a blocker
+- Share what you tried and where you're stuck
+- Don't silently time out — escalate
+
+---
+
 ## 📚 Required Reading Before Any Task
 
 1. **This Charter** — you're reading it
@@ -294,6 +328,7 @@ These are real mistakes made during the project. Learn from them.
 3. **[PROGRESS.md](PROGRESS.md)** — what's done, what's next
 4. **[GITHUB-SETUP.md](GITHUB-SETUP.md)** — full git + gh CLI workflow detail
 5. **[docs/sprint3_implementation_plan.md](docs/sprint3_implementation_plan.md)** — Sprint 3 tasks
+
 
 ---
 
